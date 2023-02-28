@@ -4902,6 +4902,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     playOnAwake: 1
+  - source: {fileID: 0}
+    name: Hit
+    clip: {fileID: 8300000, guid: d3fa6fe51a82fb0439ad82bf96332a0d, type: 3}
+    volume: 0.567
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
 --- !u!1 &1698191495
 GameObject:
   m_ObjectHideFlags: 0

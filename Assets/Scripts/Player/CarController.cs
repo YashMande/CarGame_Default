@@ -398,6 +398,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         if(currentHealth>=1)
         {
             myPhotonView.RPC("RPC_TakeDamage", myPhotonView.Owner, damage);
+            FindObjectOfType<SoundManager>().Play("Hit");
             Debug.Log("callonce");
         }
     }
@@ -408,7 +409,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         currentHealth -= damage;
         myPhotonView.RPC("RPC_UpdateHealthBar", RpcTarget.All, currentHealth);
         Debug.Log("takingdamage");
-        
+        FindObjectOfType<SoundManager>().Play("Hit");
         if (currentHealth <=0)
         {
          
