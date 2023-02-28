@@ -33,7 +33,7 @@ public class RotateCamWithCursor : MonoBehaviour
 
        if(cC.speedInput >0)
         {
-            if(cmv.m_Lens.FieldOfView <=80)
+            if(cmv.m_Lens.FieldOfView <=90)
             {
                 speed_particleSystem.SetActive(true);
                 cmSpeed = cmSpeed + 1.5f * Time.deltaTime;

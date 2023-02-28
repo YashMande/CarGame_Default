@@ -173,14 +173,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.051886797, g: 1, b: 0.707465, a: 1}
+  m_Color: {r: 0.033018887, g: 0.9311605, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 263d180a4846a2641adf2a12f191b917, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 227efb60fddd72545b1f15b9eda3c794, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -7301,8 +7301,6 @@ GameObject:
   - component: {fileID: 8138645138213251730}
   - component: {fileID: 892166165}
   - component: {fileID: 892166166}
-  - component: {fileID: 5166016296680433268}
-  - component: {fileID: 1784239150274995644}
   - component: {fileID: 2090455876863927973}
   m_Layer: 0
   m_Name: Airship1
@@ -7445,6 +7443,7 @@ MonoBehaviour:
   coolDown2: 5
   doOnce: 0
   jumping: 0
+  abilities: {fileID: 1137156056}
   mC: {fileID: 0}
 --- !u!114 &8138645138213251730
 MonoBehaviour:
@@ -7499,33 +7498,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &5166016296680433268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017809062408540906}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 092c6d1d683bfb04fb5eeb3e4504f42a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthbar: []
---- !u!64 &1784239150274995644
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017809062408540906}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1129582314147786300, guid: 7f66059a58c990d40899f00034713dc8, type: 3}
 --- !u!65 &2090455876863927973
 BoxCollider:
   m_ObjectHideFlags: 0

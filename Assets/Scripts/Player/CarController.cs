@@ -62,9 +62,16 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
 
  
     public MainCanvas mC;
+    //Audio
+    AudioSource engineSound;
+    AudioSource shootSound;
+    float minimunPitch = 0.4f;
+    float maxPitach = 3.5f;
+    float boostPitchMax = 5;
     private void Awake()
     {
         mC = GameObject.FindObjectOfType<MainCanvas>();
+        
     }
     public void Start()
     {   
@@ -86,7 +93,10 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         }
         else
         {
-           OGCanvas.SetActive(false);           
+           OGCanvas.SetActive(false);
+           engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
+           shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
+           engineSound.Play();
         }        
         hitRaycast = gameObject.GetComponent<LookAtMouse>();
         pvtFwdAccel = fwdAccel;
@@ -99,6 +109,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         canUse1 = true;
         canUse2 = true;
         transform.position = sphereRB.transform.position;
+        engineSound.pitch = minimunPitch;
     }
 
     public void Update()
@@ -127,6 +138,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                     canUse1 = false;
                     startOverlay1 = true;
                     fwdAccel = pvtFwdAccel;
+                    maxPitach = 3.5f;
                     StartCoroutine(WaitTimerAB1());
                 }
                 if (startOverlay1)
@@ -152,6 +164,8 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 {
                     jumping = false;
                 }
+
+              
             }
             
         }
@@ -208,6 +222,10 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * 2, 0f));
             thrustEffects[0].SetActive(false);
             thrustEffects[1].SetActive(false);
+            if(engineSound.pitch >= minimunPitch)
+            {
+                engineSound.pitch = engineSound.pitch - 1 * Time.deltaTime;
+            }
         }
 
         if (Input.GetAxis("Vertical") > 0)
@@ -218,6 +236,15 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             thrustEffects[1].SetActive(true);
             thrustEffects[0].transform.localScale = new Vector3(3,3,3);
             thrustEffects[1].transform.localScale = new Vector3(3,3,3);
+            if(engineSound.pitch < maxPitach)
+            {
+                engineSound.pitch = engineSound.pitch + 1 * Time.deltaTime;
+            }
+            else if(engineSound.pitch > maxPitach)
+            {
+                engineSound.pitch = engineSound.pitch - 1 * Time.deltaTime;
+            }
+
         }
         else if (Input.GetAxis("Vertical") < 0)
         {
@@ -226,7 +253,12 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, -turnInput * turnStrength * Time.deltaTime * 2, 0f));
             thrustEffects[0].SetActive(false);
             thrustEffects[1].SetActive(false);
+            if (engineSound.pitch >= minimunPitch)
+            {
+                engineSound.pitch = engineSound.pitch - 1 * Time.deltaTime;
+            }
         }
+
     }
     public void Boosting()
     {
@@ -234,11 +266,13 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             isBoosted = true;
+            maxPitach = boostPitchMax;
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             isBoosted = false;
             fwdAccel = pvtFwdAccel;
+            maxPitach = 3.5f;
 
         }
         if (isBoosted)
@@ -264,10 +298,12 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         if(Input.GetMouseButtonDown(0))
         {
             isShooting = true;
+            shootSound.Play();
         }
         if(Input.GetMouseButtonUp(0))
         {
             isShooting = false;
+            shootSound.Stop();
         }
 
         if(isShooting)
@@ -282,6 +318,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                     {
                         fireRate = fRate;
                         PhotonNetwork.Instantiate("HitEffect", hitRaycast.hitInfo.point, Quaternion.identity);
+                        
                         if(hitRaycast.hitInfo.collider.gameObject.tag == "Player")
                         {                           
                                 hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(10);                            
