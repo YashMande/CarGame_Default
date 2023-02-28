@@ -74,7 +74,7 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     void RPC_GetKill()
     {
-      
+        FindObjectOfType<SoundManager>().Play("Blast");
         Debug.Log("kill");
         kills = kills + 1;
         Hashtable hash = new Hashtable();
