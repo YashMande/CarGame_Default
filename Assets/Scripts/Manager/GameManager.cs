@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviourPun
     public int maxKills;
     PhotonView pV;
     public bool gameEnded;
+    public string playerWon;
     // Start is called before the first frame update
     void Awake()
     {

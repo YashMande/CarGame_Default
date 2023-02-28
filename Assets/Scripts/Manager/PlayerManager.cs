@@ -93,6 +93,12 @@ public class PlayerManager : MonoBehaviour
         if(kills >= gm.maxKills)
         {
             gm.photonView.RPC("RPC_GameOver", RpcTarget.All);
+            gm.playerWon = cC.nickName.ToString();
+        }
+        if(gm.gameEnded)
+        {
+            cC.enabled = false;
+            
         }
     }
 

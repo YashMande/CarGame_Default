@@ -18,15 +18,20 @@ public class MainCanvas : MonoBehaviourPun
 
     public TextMeshProUGUI respawnText;
     public bool rsText;
+    public GameObject gameOverScreen;
+    GameManager gM;
+    bool gameEnd;
+    public TextMeshProUGUI playerName;
     // Start is called before the first frame update
     void Start()
     {
         FindObjectOfType<SoundManager>().Stop("BG");
         gameStarted = false;
         allPlayerConnected = false;
+        gameOverScreen.SetActive(false);
         ResetTimer();
         myPhotonView = gameObject.GetPhotonView();
-
+        gM = FindObjectOfType<GameManager>();
         respawnText.gameObject.SetActive(false);
     }
     
@@ -69,7 +74,12 @@ public class MainCanvas : MonoBehaviourPun
           
         }
 
-
+        if(gM.gameEnded && !gameEnd)
+        {
+            gameEnd = true;
+            gameOverScreen.SetActive(true);
+            playerName.text = gM.playerWon;
+        }
 
         
     }
