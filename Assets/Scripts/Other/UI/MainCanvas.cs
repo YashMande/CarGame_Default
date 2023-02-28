@@ -93,19 +93,27 @@ public class MainCanvas : MonoBehaviourPun
         playerConencted.text = ("All Players Connected");
         yield return new WaitForSeconds(1f);
         playerConencted.text = ("Match Starting in 5");
+        FindObjectOfType<SoundManager>().Play("Beep");
         yield return new WaitForSeconds(1f);
         playerConencted.text = ("Match Starting in 4");
+        FindObjectOfType<SoundManager>().Play("Beep");
         yield return new WaitForSeconds(1f);
         playerConencted.text = ("Match Starting in 3");
+        FindObjectOfType<SoundManager>().Play("Beep");
         yield return new WaitForSeconds(1f);
         playerConencted.text = ("Match Starting in 2");
+        FindObjectOfType<SoundManager>().Play("Beep");
         yield return new WaitForSeconds(1f);
         playerConencted.text = ("Match Starting in 1");
+        FindObjectOfType<SoundManager>().Play("Beep");
         yield return new WaitForSeconds(1f);
+        FindObjectOfType<SoundManager>().Play("Beep2");
         playerConencted.text = ("Get Em");
         yield return new WaitForSeconds(1f);
         playerConencted.gameObject.SetActive(false);
         gameStarted = true;
+        yield return new WaitForSeconds(0.5f);
+        FindObjectOfType<SoundManager>().Stop("Beep2");
 
 
     }

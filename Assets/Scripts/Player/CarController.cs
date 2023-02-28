@@ -59,7 +59,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public bool doOnce, jumping;
     bool startOverlay1,startOverlay2;
     public GameObject abilities;
-
+    public GameObject indicatorCanvas;
  
     public MainCanvas mC;
     //Audio
@@ -89,11 +89,13 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             Overlay1.enabled = false;
             Overlay2.enabled = false;
             abilities.SetActive(false);
+            indicatorCanvas.SetActive(true);
             return;
         }
         else
         {
            OGCanvas.SetActive(false);
+            indicatorCanvas.SetActive(false);
            engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
            shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
            engineSound.Play();
@@ -399,7 +401,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         {
             myPhotonView.RPC("RPC_TakeDamage", myPhotonView.Owner, damage);
             FindObjectOfType<SoundManager>().Play("Hit");
-            Debug.Log("callonce");
+            //Debug.Log("callonce");
         }
     }
 
@@ -408,22 +410,22 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     {      
         currentHealth -= damage;
         myPhotonView.RPC("RPC_UpdateHealthBar", RpcTarget.All, currentHealth);
-        Debug.Log("takingdamage");
+        //Debug.Log("takingdamage");
         FindObjectOfType<SoundManager>().Play("Hit");
         if (currentHealth <=0)
         {
          
             if(doOnce == false)
             {
-                Debug.Log("gg" + info.Sender);
-                Debug.Log("ff" + info.photonView.Owner);
+                //Debug.Log("gg" + info.Sender);
+                //Debug.Log("ff" + info.photonView.Owner);
                 FindObjectOfType<SoundManager>().Play("Blast");
                 //mC.PlayerKilled(info.Sender.NickName, info.photonView.Owner.NickName);
                 doOnce = true;
                 mC.ResPText();
                 mC.gameObject.GetComponent<PhotonView>().RPC("PlayerKilled", RpcTarget.All, info.Sender.NickName, info.photonView.Owner.NickName);
                 pM.Die();
-                Debug.Log("healthlow");
+                //Debug.Log("healthlow");
                 PlayerManager.Find(info.Sender).GetKill(info);
                 
                 //currentHealth = 0;         
