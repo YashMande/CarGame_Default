@@ -92,13 +92,9 @@ public class PlayerManager : MonoBehaviour
     {
         if(kills >= gm.maxKills)
         {
-            PV.RPC("RPC_GameOver", RpcTarget.All);
+            gm.photonView.RPC("RPC_GameOver", RpcTarget.All);
         }
     }
 
-    [PunRPC]
-    void RPC_GameOver()
-    {
-        cC.GetComponent<CarController>().enabled = false;
-    }
+    
 }

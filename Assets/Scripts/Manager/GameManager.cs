@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class GameManager : MonoBehaviour
+using Photon.Pun;
+public class GameManager : MonoBehaviourPun
 {
     static GameManager gM;
     private int MaxKills;
     public int maxKills;
+    PhotonView pV;
+    public bool gameEnded;
     // Start is called before the first frame update
     void Awake()
     {
@@ -19,7 +21,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject); //makes sure only 1 sound manager is present inthe scene
         }
+        pV = gameObject.GetPhotonView();
+    }
+    [PunRPC]
+    void RPC_GameOver()
+    {
+        gameEnded = true;
+        Debug.Log("GameEnded");
     }
 
-  
 }
