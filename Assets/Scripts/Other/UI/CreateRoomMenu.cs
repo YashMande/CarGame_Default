@@ -16,6 +16,7 @@ public class CreateRoomMenu : MonoBehaviourPunCallbacks
     }
     public void OnClick_CreateRoom()
     {
+        FindObjectOfType<SoundManager>().Play("Click");
         if(!PhotonNetwork.IsConnected)
         {
             return;

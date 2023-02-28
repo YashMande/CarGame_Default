@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour
             s.source.loop = s.loop;
             s.source.playOnAwake = s.playOnAwake;
         }
-        //Play("EngineSound"); //plays the background music once the game starts
+        Play("BG"); //plays the background music once the game starts
     }
 
     public void Play(string name) //function which takes a string variable and plays the sound once

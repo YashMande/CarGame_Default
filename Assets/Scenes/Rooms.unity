@@ -1863,7 +1863,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 241346300}
   m_HandleRect: {fileID: 241346299}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4922,6 +4922,20 @@ MonoBehaviour:
     volume: 0.686
     pitch: 2
     loop: 1
+    playOnAwake: 0
+  - source: {fileID: 0}
+    name: BG
+    clip: {fileID: 8300000, guid: 7d6c8e1c41e025a45b08b8931a746e20, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 1
+    playOnAwake: 0
+  - source: {fileID: 0}
+    name: Click
+    clip: {fileID: 8300000, guid: d5bb46d85984bb940b394534a9b07d66, type: 3}
+    volume: 0.576
+    pitch: 1
+    loop: 0
     playOnAwake: 0
 --- !u!1 &1698191495
 GameObject:

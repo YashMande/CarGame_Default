@@ -121,7 +121,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
             }
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            
+            FindObjectOfType<SoundManager>().Play("Click");
             PhotonNetwork.LoadLevel(1);
         }
        
@@ -131,6 +131,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     {
         if(!PhotonNetwork.IsMasterClient)
         {
+            FindObjectOfType<SoundManager>().Play("Click");
             SetReadyUp(!_ready);
             base.photonView.RPC("RPC_ChangeReadyState", RpcTarget.MasterClient,PhotonNetwork.LocalPlayer,_ready);
         }

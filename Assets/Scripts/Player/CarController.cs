@@ -59,7 +59,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public bool doOnce, jumping;
     bool startOverlay1,startOverlay2;
     public GameObject abilities;
-    public GameObject indicatorCanvas;
+
  
     public MainCanvas mC;
     //Audio
@@ -89,13 +89,13 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             Overlay1.enabled = false;
             Overlay2.enabled = false;
             abilities.SetActive(false);
-            indicatorCanvas.SetActive(true);
+         
             return;
         }
         else
         {
            OGCanvas.SetActive(false);
-            indicatorCanvas.SetActive(false);
+          
            engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
            shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
            engineSound.Play();

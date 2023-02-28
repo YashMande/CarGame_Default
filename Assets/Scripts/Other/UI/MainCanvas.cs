@@ -21,6 +21,7 @@ public class MainCanvas : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
+        FindObjectOfType<SoundManager>().Stop("BG");
         gameStarted = false;
         allPlayerConnected = false;
         ResetTimer();
