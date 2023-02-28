@@ -17,8 +17,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     int characterID;
     public GameObject deathEffect;
-  
 
+    GameManager gm;
     // Start is called before the first frame update
     void Awake()
     {
@@ -33,6 +33,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         cC.mC.playerCount++;
+        gm = FindObjectOfType<GameManager>();
     }
     public void Die()
     {
@@ -87,5 +88,17 @@ public class PlayerManager : MonoBehaviour
         return FindObjectsOfType<PlayerManager>().SingleOrDefault(x => x.PV.Owner == player);
     }
 
+    private void Update()
+    {
+        if(kills >= gm.maxKills)
+        {
+            PV.RPC("RPC_GameOver", RpcTarget.All);
+        }
+    }
 
+    [PunRPC]
+    void RPC_GameOver()
+    {
+        cC.GetComponent<CarController>().enabled = false;
+    }
 }
