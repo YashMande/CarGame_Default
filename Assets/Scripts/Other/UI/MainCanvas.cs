@@ -76,9 +76,10 @@ public class MainCanvas : MonoBehaviourPun
 
         if(gM.gameEnded && !gameEnd)
         {
-            gameEnd = true;
+            
             gameOverScreen.SetActive(true);
             playerName.text = gM.playerWon;
+            gameEnd = true;
         }
 
         

@@ -2823,6 +2823,7 @@ MonoBehaviour:
   respawnText: {fileID: 161109317}
   rsText: 0
   gameOverScreen: {fileID: 1688429396}
+  playerName: {fileID: 1617198864}
 --- !u!114 &1251713513
 MonoBehaviour:
   m_ObjectHideFlags: 0
