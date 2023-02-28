@@ -25,9 +25,10 @@ public class GameManager : MonoBehaviourPun
         pV = gameObject.GetPhotonView();
     }
     [PunRPC]
-    void RPC_GameOver()
+    void RPC_GameOver(string name)
     {
         gameEnded = true;
+        playerWon = name;
         Debug.Log("GameEnded");
     }
 

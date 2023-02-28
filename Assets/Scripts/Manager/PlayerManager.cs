@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     public void RespawnS()
     {
         
-        PV.RPC("Respawn", RpcTarget.All);
+        PV.RPC("Respawn", RpcTarget.All, cC.nickName.text);
 
     }
 
@@ -93,7 +93,7 @@ public class PlayerManager : MonoBehaviour
         if(kills >= gm.maxKills)
         {
             gm.photonView.RPC("RPC_GameOver", RpcTarget.All);
-            gm.playerWon = cC.nickName.ToString();
+           
         }
         if(gm.gameEnded)
         {
