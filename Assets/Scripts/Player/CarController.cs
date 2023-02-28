@@ -240,7 +240,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             thrustEffects[1].transform.localScale = new Vector3(3,3,3);
             if(engineSound.pitch < maxPitach)
             {
-                engineSound.pitch = engineSound.pitch + 1 * Time.deltaTime;
+                engineSound.pitch = engineSound.pitch + 0.5f * Time.deltaTime;
             }
             else if(engineSound.pitch > maxPitach)
             {

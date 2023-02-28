@@ -1863,7 +1863,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 241346300}
   m_HandleRect: {fileID: 241346299}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3098,6 +3098,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxKills: 2
   gameEnded: 0
+  playerWon: 
 --- !u!4 &839784221
 Transform:
   m_ObjectHideFlags: 0
@@ -5002,6 +5003,13 @@ MonoBehaviour:
   - source: {fileID: 0}
     name: Click
     clip: {fileID: 8300000, guid: d5bb46d85984bb940b394534a9b07d66, type: 3}
+    volume: 0.576
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    name: BoostPad
+    clip: {fileID: 8300000, guid: db40c37b29922c941b117e517b38f9d8, type: 3}
     volume: 0.576
     pitch: 1
     loop: 0

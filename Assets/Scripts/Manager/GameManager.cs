@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviourPun
     {
         gameEnded = true;
         playerWon = name;
+        FindObjectOfType<SoundManager>().Stop("ShootSound");
         Debug.Log("GameEnded");
     }
 

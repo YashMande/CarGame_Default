@@ -27,6 +27,7 @@ public class PlayerManager : MonoBehaviour
       
         characterID = PV.OwnerActorNr;
         gameObject.transform.position = SpawnManager.Instance.spawnPoints[characterID].transform.position;
+        gameObject.transform.rotation = SpawnManager.Instance.spawnPoints[characterID].transform.rotation;
         transformPM = this.gameObject.transform.position;
         //Debug.Log(PV.OwnerActorNr + "ggg");
     }

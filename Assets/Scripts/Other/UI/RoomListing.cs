@@ -19,6 +19,7 @@ public class RoomListing : MonoBehaviour
     public void OnClick_Button()
     {
         PhotonNetwork.JoinRoom(RoomInfo.Name);
+        FindObjectOfType<SoundManager>().Play("Click");
         //PhotonNetwork.NickName = GameObject.FindGameObjectWithTag("PlayerName").GetComponent<TMP_InputField>().text;
     }
  
