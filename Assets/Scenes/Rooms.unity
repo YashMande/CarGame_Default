@@ -4895,6 +4895,13 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     playOnAwake: 0
+  - source: {fileID: 0}
+    name: Blast
+    clip: {fileID: 8300000, guid: cf23b8eabc26cff4ab02ca1bf0f1581f, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    playOnAwake: 1
 --- !u!1 &1698191495
 GameObject:
   m_ObjectHideFlags: 0

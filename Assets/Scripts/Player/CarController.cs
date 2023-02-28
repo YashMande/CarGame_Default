@@ -416,7 +416,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             {
                 Debug.Log("gg" + info.Sender);
                 Debug.Log("ff" + info.photonView.Owner);
-               
+                FindObjectOfType<SoundManager>().Play("Blast");
                 //mC.PlayerKilled(info.Sender.NickName, info.photonView.Owner.NickName);
                 doOnce = true;
                 mC.ResPText();
