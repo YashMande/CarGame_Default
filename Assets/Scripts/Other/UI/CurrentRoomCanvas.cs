@@ -10,6 +10,7 @@ public class CurrentRoomCanvas : MonoBehaviour
     [SerializeField]
     private LeaveRoomMenu _leaveRoomMenu;
     public LeaveRoomMenu LeaveRoomMenu { get { return _leaveRoomMenu; } }
+    public GameObject characterSelectCanvas;
     public void FirstInitialize(RoomsCanvases canvases)
     {
         _roomCanvases = canvases;
@@ -20,10 +21,12 @@ public class CurrentRoomCanvas : MonoBehaviour
     public  void Show()
     {
         gameObject.SetActive(true);
+        characterSelectCanvas.SetActive(true);
     }
 
     public  void Hide()
     {
         gameObject.SetActive(false);
+        characterSelectCanvas.SetActive(false);
     }
 }

@@ -2978,7 +2978,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd162f2f9c0641b4fa02d980c5dad4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 3831804143450311995, guid: 6a068ec3a1b61ae46aa15684ff482793, type: 3}
+  _prefab0: {fileID: 3831804143450311995, guid: 6a068ec3a1b61ae46aa15684ff482793, type: 3}
+  _prefab1: {fileID: 1645439134006309257, guid: 2934edce83d0f2143be1883b2f5d83e0, type: 3}
+  _prefab2: {fileID: 1645439134006309257, guid: 2934edce83d0f2143be1883b2f5d83e0, type: 3}
   spawnPoints:
   - {fileID: 2119895385}
   - {fileID: 400138734}
