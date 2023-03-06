@@ -68,15 +68,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Room Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f4dbd9d33f75997408e85b8312971eca, type: 2}
-  m_sharedMaterial: {fileID: -9003560945232351345, guid: f4dbd9d33f75997408e85b8312971eca, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7172dffd3673cde4d917262a4f0e2f1d, type: 2}
+  m_sharedMaterial: {fileID: -6352468966066138085, guid: 7172dffd3673cde4d917262a4f0e2f1d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 3.794856}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 40bab035e429bca468739feece72f7d0, type: 3}
+  m_Texture: {fileID: 2800000, guid: 05274cc83077d4f41b650aed043493c3, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

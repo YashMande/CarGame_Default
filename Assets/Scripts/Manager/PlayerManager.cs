@@ -29,7 +29,7 @@ public class PlayerManager : MonoBehaviour
         gameObject.transform.position = SpawnManager.Instance.spawnPoints[characterID].transform.position;
         gameObject.transform.rotation = SpawnManager.Instance.spawnPoints[characterID].transform.rotation;
         transformPM = this.gameObject.transform.position;
-        //Debug.Log(PV.OwnerActorNr + "ggg");
+        Debug.Log(PV.OwnerActorNr + "ggg");
     }
     private void Start()
     {
@@ -69,7 +69,7 @@ public class PlayerManager : MonoBehaviour
     {
         //PV.RPC(");
         PV.RPC("RPC_GetKill", info.Sender);
-        Debug.Log("fff");
+        //Debug.Log("fff");
 
     }
 
