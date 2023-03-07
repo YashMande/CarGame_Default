@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public GameObject notHitOBJ;
     private void Start()
     {
         Destroy(gameObject, 3f);
@@ -12,11 +13,20 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
-        if(other.gameObject.tag =="Player")
+
+
+        if (other.gameObject != notHitOBJ)
         {
-            other.gameObject.GetComponent<IDamageble>()?.TakeDamage(20);
+            if (other.gameObject.tag == "Player")
+            {
+                other.gameObject.GetComponent<IDamageble>()?.TakeDamage(20);
+            }
+           Destroy(gameObject);
         }
-        Destroy(gameObject);
+       
+        
+        
+     
+       
     }
 }

@@ -10,6 +10,7 @@ public class CharacterSelectCanvas : MonoBehaviour
     public GameObject selectionScreen;
     GameManager gm;
     public TextMeshProUGUI carName;
+    public GameObject stats1, stats2, stats3;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +27,9 @@ public class CharacterSelectCanvas : MonoBehaviour
             car1.SetActive(true);
             car2.SetActive(false);
             car3.SetActive(false);
+            stats1.SetActive(true);
+            stats2.SetActive(false);
+            stats3.SetActive(false);
             carName.text = "SpeedSter";
         }
         else if(carSelectedNumber ==1)
@@ -33,13 +37,19 @@ public class CharacterSelectCanvas : MonoBehaviour
             car2.SetActive(true);
             car1.SetActive(false);
             car3.SetActive(false);
-            carName.text = "Mid";
+            stats2.SetActive(true);
+            stats1.SetActive(false);
+            stats3.SetActive(false);
+            carName.text = "Fatty";
         }
         else if(carSelectedNumber ==2)
         {
             car3.SetActive(true);
             car1.SetActive(false);
             car2.SetActive(false);
+            stats3.SetActive(true);
+            stats2.SetActive(false);
+            stats1.SetActive(false);
             carName.text = "Heal";
         }
     }

@@ -52,7 +52,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
 
     //Abilities
     public float ability1Timer,ability2Timer;
-    private float maxAbility1Timer, maxAbility2Timer;
+    private  float maxAbility1Timer, maxAbility2Timer;
     public Image Overlay1,Overlay2,speedBoost,jumpIMG;
     public bool canUse1, canUse2;
     public int coolDown1, coolDown2;
@@ -94,11 +94,11 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         }
         else
         {
-           OGCanvas.SetActive(false);
-          
-           engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
-           shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
-           engineSound.Play();
+            OGCanvas.SetActive(false);
+            gameObject.GetComponent<Outline>().enabled = false;
+            engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
+            shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
+            engineSound.Play();
         }        
         hitRaycast = gameObject.GetComponent<LookAtMouse>();
         pvtFwdAccel = fwdAccel;
@@ -426,8 +426,16 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 mC.gameObject.GetComponent<PhotonView>().RPC("PlayerKilled", RpcTarget.All, info.Sender.NickName, info.photonView.Owner.NickName);
                 pM.Die();
                 //Debug.Log("healthlow");
-                PlayerManager.Find(info.Sender).GetKill(info);
-                
+                if(PlayerManager.Find(info.Sender)!=null)
+                {
+                    PlayerManager.Find(info.Sender).GetKill(info);
+                }
+                if (PlayerManager2.Find(info.Sender) != null)
+                {
+                    PlayerManager2.Find(info.Sender).GetKill(info);
+                }
+
+                //PlayerManager2.Find(info.Sender).GetKill(info);
                 //currentHealth = 0;         
                 
                 gameObject.SetActive(false);

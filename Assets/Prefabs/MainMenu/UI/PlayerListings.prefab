@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Room Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7172dffd3673cde4d917262a4f0e2f1d, type: 2}
-  m_sharedMaterial: {fileID: -6352468966066138085, guid: 7172dffd3673cde4d917262a4f0e2f1d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 150194bb9243bf0499ff91fc73f4cd7c, type: 2}
+  m_sharedMaterial: {fileID: 8171200516610853871, guid: 150194bb9243bf0499ff91fc73f4cd7c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

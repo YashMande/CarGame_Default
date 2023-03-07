@@ -29,7 +29,7 @@ public class PlayerManager : MonoBehaviour
         gameObject.transform.position = SpawnManager.Instance.spawnPoints[characterID].transform.position;
         gameObject.transform.rotation = SpawnManager.Instance.spawnPoints[characterID].transform.rotation;
         transformPM = this.gameObject.transform.position;
-        Debug.Log(PV.OwnerActorNr + "ggg");
+        //Debug.Log(PV.OwnerActorNr + "ggg");
     }
     private void Start()
     {
@@ -63,6 +63,12 @@ public class PlayerManager : MonoBehaviour
         cC.currentHealth = cC.maxHealth;
         cC.doOnce = false;
         cC.RPC_UpdateHealthBar(cC.currentHealth);
+        cC.canUse1 = true;
+        cC.canUse2 = true;
+        cC.Overlay1.fillAmount = 0;
+        cC.Overlay2.fillAmount = 0;
+        cC.isBoosted = false;
+        cC.jumping = false;
         //Debug.Log("Dead");
     }
     public void GetKill(PhotonMessageInfo info)

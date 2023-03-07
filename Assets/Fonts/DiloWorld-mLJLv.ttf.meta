@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 40363730f5a257a449dfefde0b0956e8
+guid: 67d7694c9b44df34399e0cb1e0f90c21
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Spongebob 3D
+  - Dilo World
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

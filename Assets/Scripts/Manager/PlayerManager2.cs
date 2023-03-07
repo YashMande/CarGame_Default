@@ -39,7 +39,65 @@ public class PlayerManager2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (kills >= gm.maxKills)
+        {
+            gm.photonView.RPC("RPC_GameOver", RpcTarget.All, cC.nickName.text);
+
+        }
+        if (gm.gameEnded)
+        {
+            cC.enabled = false;
+
+        }
+    }
+    public void Die()
+    {
+        PhotonNetwork.Instantiate("DeathEffect", cC.gameObject.transform.position, Quaternion.identity);
+        cC.gameObject.SetActive(false);
+        deaths++;
+        Hashtable hash = new Hashtable();
+        hash.Add("deaths", deaths);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+    }
+    public void GetKill(PhotonMessageInfo info)
+    {   
+        PV.RPC("RPC_GetKill", info.Sender);        
+    }
+
+    [PunRPC]
+    void RPC_GetKill()
+    {
+        FindObjectOfType<SoundManager>().Play("Blast");
+        Debug.Log("kill");
+        kills = kills + 1;
+        Hashtable hash = new Hashtable();
+        hash.Add("kills", kills);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+    }
+    public void RespawnS()
+    {
+
+        PV.RPC("Respawn", RpcTarget.All);
+
+    }
+
+    [PunRPC]
+    IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(3f);
+        cC.sphereRB.gameObject.transform.position = transformPM;
+        yield return new WaitForSeconds(0.5f);
+        cC.gameObject.SetActive(true);
+        cC.currentHealth = cC.maxHealth;
+        cC.doOnce = false;
+        cC.RPC_UpdateHealthBar(cC.currentHealth);
+        //cC.canUse1 = true;
+        //cC.canUse2 = true;
+        //cC.Overlay1.fillAmount = 0;
+        //cC.Overlay2.fillAmount = 0;
+        //cC.isBoosted = false;
+        //cC.jumping = false;
+        //Debug.Log("Dead");
     }
     public static PlayerManager2 Find(Player player)
     {
