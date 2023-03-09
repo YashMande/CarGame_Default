@@ -37751,6 +37751,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _turretBarrel: {fileID: 1383384237014900505}
   spaceShip: {fileID: 8324334987026070797}
+  ignoreme:
+  - serializedVersion: 2
+    m_Bits: 4
 --- !u!114 &3120334047879533896
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9597,7 +9597,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 0.84
+  m_Radius: 1.56
   m_Center: {x: 0, y: 0, z: 0.54}
 --- !u!54 &-483210376865227106
 Rigidbody:

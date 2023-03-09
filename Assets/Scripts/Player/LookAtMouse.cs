@@ -10,34 +10,34 @@ public class LookAtMouse : MonoBehaviourPun
     public Transform spaceShip;
     [SerializeField]
     public RaycastHit hitInfo;
-   
+    public LayerMask[] ignoreme;
     
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if(photonView.IsMine)
         {
             Ray rayOrigin = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(rayOrigin, out hitInfo))
+            if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, ~ignoreme[0]))
             {
-                //Debug.Log(hitInfo.collider.gameObject.name);
-                if (hitInfo.collider != null)
-                {
-                    
-                    
-                        Vector3 direction = hitInfo.point - _turretBarrel.position;
-                        _turretBarrel.rotation = Quaternion.LookRotation(direction);
-                    
-                   
+               
+                    Vector3 direction = hitInfo.point - _turretBarrel.position;
+                    _turretBarrel.rotation = Quaternion.LookRotation(direction);
+                    //Debug.Log(hitInfo.collider.gameObject.name);
+                    //Debug.DrawLine(_turretBarrel.position, hitInfo.point);
+                    if (hitInfo.collider != null)
+                    {
 
-                }
+
+
+
+
+
+                    }
+                
             }
         }
-        else
-        {
-            return;
-        }
+      
    
     }
 

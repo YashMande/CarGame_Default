@@ -49,7 +49,7 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
     private PlayerManager2 pM;
     public GameObject abilities;
     public bool doOnce;
-
+    public GameObject turret;
     // Start is called before the first frame update
 
     private void Awake()
@@ -75,7 +75,7 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
         {
             gameObject.GetComponent<Outline>().enabled = false;
             OGCanvas.SetActive(false);
-            gameObject.layer = 13;
+            //gameObject.layer = 13;
         }
         sphereRB.transform.parent = null;
         transform.position = sphereRB.transform.position;
@@ -188,9 +188,10 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
            if (fireRate <= 0)
            {
                fireRate = fRate;
-               GameObject obj = PhotonNetwork.Instantiate("FireBullet", firePoint.position, Quaternion.identity);
-                obj.GetComponent<Bullet>().notHitOBJ = this.gameObject;
-               obj.GetComponent<Rigidbody>().velocity = (hitRaycast.hitInfo.point - firePoint.position).normalized * bulletSpeed;
+               GameObject obj = PhotonNetwork.Instantiate("FireBullet", firePoint.position, turret.transform.rotation);
+               // Instantiate(bullet, firePoint.position, turret.transform.rotation);
+                //obj.GetComponent<Bullet>().notHitOBJ = this.gameObject;
+               //obj.GetComponent<Rigidbody>().velocity = (hitRaycast.hitInfo.point - firePoint.position).normalized * bulletSpeed;
                 obj.GetComponent<SphereCollider>().enabled = true;
            }
              
@@ -243,4 +244,6 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
         }
 
     }
+
+
 }
