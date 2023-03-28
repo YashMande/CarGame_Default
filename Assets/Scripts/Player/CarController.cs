@@ -7,7 +7,7 @@ using Cinemachine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Realtime;
-
+using UnityEngine.Rendering.PostProcessing;
 public class CarController : MonoBehaviourPunCallbacks , IDamageble
 {
     [SerializeField]
@@ -22,7 +22,8 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public Vector3 offset;
     public float fireRate;
     private float fRate;
-
+    public float portalTimer;
+    private float PortalTImer;
     public bool isGrounded;
     public LayerMask whatIsGround;
     public float groundRayLength;
@@ -30,7 +31,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public GameObject hitEffect;
     public GameObject[] thrustEffects;
     public GameObject barrelEffect;
-
+    bool canShoot;
     private float pvtFwdAccel;
     public bool isBoosted;
     bool isShooting;
@@ -49,38 +50,47 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     [SerializeField]
     private PlayerManager pM;
 
-
+    public Material[] materials;
+    public float damage;
     //Abilities
     public float ability1Timer,ability2Timer;
-    private  float maxAbility1Timer, maxAbility2Timer;
+
     public Image Overlay1,Overlay2,speedBoost,jumpIMG;
     public bool canUse1, canUse2;
     public int coolDown1, coolDown2;
-    public bool doOnce, jumping;
+    public bool doOnce; 
     bool startOverlay1,startOverlay2;
     public GameObject abilities;
-
- 
+    GameObject portal;
+    bool onceOnly1,onceOnly2;
     public MainCanvas mC;
+
     //Audio
     AudioSource engineSound;
     AudioSource shootSound;
     float minimunPitch = 0.4f;
     float maxPitach = 3.5f;
-    float boostPitchMax = 5;
+    public GameObject fPoint;
+    public GameObject chargedShot;
+    public GameObject chargedShotPrefab;
+    PostProcessVolume PPV;
+     Vignette vignette;
     private void Awake()
     {
         mC = GameObject.FindObjectOfType<MainCanvas>();
-        
+        canUse1 = true;
+        canUse2 = true;
+
     }
     public void Start()
-    {   
-
+    {
+        PPV = FindObjectOfType<PostProcessVolume>();
+         PPV.profile.TryGetSettings(out vignette);
         currentHealth = maxHealth;
         pM = gameObject.GetComponentInParent<PlayerManager>();     
         myPhotonView = gameObject.GetComponent<PhotonView>();
         nickName.text = photonView.Owner.NickName;
-       
+        PortalTImer = portalTimer;
         if (!myPhotonView.IsMine)
         {         
             cam.enabled = false;
@@ -106,12 +116,10 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         sphereRB.transform.parent = null;
         Overlay1.fillAmount = 0;
         Overlay2.fillAmount = 0;
-        maxAbility1Timer = ability1Timer;
-        maxAbility2Timer = ability2Timer;
-        canUse1 = true;
-        canUse2 = true;
+        gameObject.GetComponent<MeshRenderer>().material = materials[0];  
         transform.position = sphereRB.transform.position;
         engineSound.pitch = minimunPitch;
+        canShoot = true;
     }
 
     public void Update()
@@ -130,43 +138,35 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 UpdateHealthBar();
                 if (canUse1)
                 {
-                    Boosting();
+                    BulkUp();
                 }
-                if (ability1Timer <= 0)
+                if (canUse2)
                 {
-                    ability1Timer = maxAbility1Timer;
+                    EnergyShot();
+                }
+                if (canUse1 == false && onceOnly1 == false)
+                {
+                    onceOnly1 = true;
                     Overlay1.fillAmount = 1;
                     speedBoost.fillAmount = 1;
-                    canUse1 = false;
-                    startOverlay1 = true;
-                    fwdAccel = pvtFwdAccel;
-                    maxPitach = 3.5f;
                     StartCoroutine(WaitTimerAB1());
+                }
+                if(canUse2 == false && onceOnly2 == false)
+                {
+                    onceOnly2 = true;
+                    Overlay2.fillAmount = 1;
+                    jumpIMG.fillAmount = 1;
+                    StartCoroutine(WaitTimerAB2());
                 }
                 if (startOverlay1)
                 {
                     Overlay1Timer();
                 }
-
-                if (ability2Timer <= 0)
-                {
-                    ability2Timer = maxAbility2Timer;
-                    Overlay2.fillAmount = 1;
-                    jumpIMG.fillAmount = 1;
-                    canUse2 = false;
-                    jumping = false;
-                    startOverlay2 = true;
-                    StartCoroutine(WaitTimerAB2());
-                }
-                if (startOverlay2)
+                if(startOverlay2)
                 {
                     Overlay2Timer();
                 }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    jumping = false;
-                }
-
+               
               
             }
             
@@ -175,40 +175,55 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     }
     void Overlay1Timer()
     {      
-        Overlay1.fillAmount = Overlay1.fillAmount - 0.2f * Time.deltaTime;
+        Overlay1.fillAmount = Overlay1.fillAmount - 0.142f * Time.deltaTime;
     }
     void Overlay2Timer()
     {
-        Overlay2.fillAmount = Overlay2.fillAmount - 0.2f * Time.deltaTime;
+        Overlay2.fillAmount = Overlay2.fillAmount -0.15f* Time.deltaTime;
     }
    IEnumerator WaitTimerAB1()
     {       
+        yield return new WaitForSeconds(ability1Timer);
+        myPhotonView.RPC("BulkUpScale", RpcTarget.All,0);
+        damage = 10;
+        fireRate = 0.08f;
+        startOverlay1 = true;
+        StartCoroutine(CoolDownTimer());
+    }
+    IEnumerator CoolDownTimer()
+    {
         yield return new WaitForSeconds(coolDown1);
         canUse1 = true;
-        isBoosted = false;
-    }
+        onceOnly1 = false;
+        startOverlay1 = false;
 
+    }
+    public void ResetAfterDead()
+    {
+        canUse1 = true;
+        onceOnly1 = false;
+        startOverlay1 = false;
+        damage = 10;
+        fireRate = 0.08f;
+        myPhotonView.RPC("BulkUpScale", RpcTarget.All,0);
+    }
     IEnumerator WaitTimerAB2()
     {
-        yield return new WaitForSeconds(coolDown2);
-        canUse2 = true;
+ 
+        yield return new WaitForSeconds(ability2Timer);
+        startOverlay2 = true;
+        StartCoroutine(CoolDownTimer2());
     }
-   public void Jump()
+    IEnumerator CoolDownTimer2()
     {
-        if(Input.GetKey(KeyCode.Space))
-        {
-            jumping = true;
-            sphereRB.AddForce(Vector3.up * 8000);
-            ability2Timer = ability2Timer - 1 * Time.deltaTime;
-            jumpIMG.fillAmount = jumpIMG.fillAmount - 0.2f * Time.deltaTime;
-            //if (Mathf.Abs(speedInput) > 0)
-            //{
-            //    sphereRB.AddForce(transform.forward * speedInput / 100);
-            //}
-        }
-     
-       
+        yield return new WaitForSeconds(coolDown1);
+        canUse2 = true;
+        onceOnly2 = false;
+        startOverlay2 = false;
+        
+
     }
+
     public void UpdateHealthBar()
     {
         healthbarSlider.value = currentHealth / 100;
@@ -232,6 +247,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
 
         if (Input.GetAxis("Vertical") > 0)
         {
+           
             speedInput = Input.GetAxis("Vertical") * fwdAccel * 1000f;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * 2, 0f));
             thrustEffects[0].SetActive(true);
@@ -262,81 +278,92 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         }
 
     }
-    public void Boosting()
+    public void BulkUp()
     {
-        //Boosting        
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+    
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
-            isBoosted = true;
-            maxPitach = boostPitchMax;
+          
+            canUse1 = false;       
+           // gameObject.GetComponent<MeshRenderer>().material = materials[1];
+            damage = 25;
+            fireRate = 0.05f;
+            FindObjectOfType<SoundManager>().Play("BulkUp");
+            myPhotonView.RPC("BulkUpScale", RpcTarget.All,1);
+         
+            
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            isBoosted = false;
-            fwdAccel = pvtFwdAccel;
-            maxPitach = 3.5f;
-
-        }
-        if (isBoosted)
-        {
-            fwdAccel = fwdAccel + 40;
-            thrustEffects[0].transform.localScale = new Vector3(5, 5, 5);
-            thrustEffects[1].transform.localScale = new Vector3(5, 5, 5);         
-            ability1Timer = ability1Timer - 1 * Time.deltaTime;
-            speedBoost.fillAmount = speedBoost.fillAmount - 0.2f * Time.deltaTime;           
-        }
-        if (fwdAccel > 70)
-        {
-            fwdAccel = 70;
-        }
-        if (fwdAccel < pvtFwdAccel)
-        {
-            fwdAccel = pvtFwdAccel;
-        }    
     }
-
+    [PunRPC]
+    void BulkUpScale(int mat)
+    {
+        gameObject.GetComponent<MeshRenderer>().material = materials[mat];
+    }
+    public void EnergyShot()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            canUse2 = false;
+            canShoot = false;
+            chargedShot.SetActive(true);
+            Invoke("ShootChagedShot", 2);
+           // Instantiate(chargedShot,barrelEffect.transform.position,)
+        }
+    }
+    void ShootChagedShot()
+    {
+        chargedShot.SetActive(false);
+      GameObject obj=  PhotonNetwork.Instantiate("ChargedShotBullet", fPoint.transform.position, fPoint.transform.rotation);
+        obj.GetComponent<SphereCollider>().enabled = true;
+        canShoot = true;
+    }
     public void Shooting()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(canShoot)
         {
-            isShooting = true;
-            shootSound.Play();
-        }
-        if(Input.GetMouseButtonUp(0))
-        {
-            isShooting = false;
-            shootSound.Stop();
+            if (Input.GetMouseButtonDown(0))
+            {
+                isShooting = true;
+                shootSound.Play();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                isShooting = false;
+                shootSound.Stop();
+            }
+
+            if (isShooting)
+            {
+                barrelEffect.SetActive(true);
+                if (hitRaycast.hitInfo.collider.gameObject != this.gameObject)
+                {
+                    if (hitRaycast.hitInfo.collider.gameObject != null)
+                    {
+                        fireRate = fireRate - 1 * Time.deltaTime;
+                        if (fireRate <= 0)
+                        {
+                            fireRate = fRate;
+                            PhotonNetwork.Instantiate("HitEffect", hitRaycast.hitInfo.point, Quaternion.identity);
+
+                            if (hitRaycast.hitInfo.collider.gameObject.tag == "Player")
+                            {
+                                hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(damage);
+                            }
+
+
+                        }
+
+                    }
+
+                }
+            }
+            else
+            {
+                barrelEffect.SetActive(false);
+            }
         }
 
-        if(isShooting)
-        {
-            barrelEffect.SetActive(true);
-            if (hitRaycast.hitInfo.collider.gameObject != this.gameObject)
-            {
-                if(hitRaycast.hitInfo.collider.gameObject!= null)
-                {
-                    fireRate = fireRate - 1 * Time.deltaTime;
-                    if (fireRate <= 0)
-                    {
-                        fireRate = fRate;
-                        PhotonNetwork.Instantiate("HitEffect", hitRaycast.hitInfo.point, Quaternion.identity);
-                        
-                        if(hitRaycast.hitInfo.collider.gameObject.tag == "Player")
-                        {                           
-                                hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(10);                            
-                        }
-                       
-                       
-                    }
-                   
-                }
-              
-            }       
-        }
-        else
-        {
-            barrelEffect.SetActive(false);
-        }
+
     }
 
 
@@ -354,26 +381,14 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             }
             if (mC.gameStarted)
             {
-             
 
-                //if (isGrounded || jumping)
-                //{
-                //    sphereRB.drag = dragOnGround;
-                //    if (Mathf.Abs(speedInput) > 0)
-                //    {
-                //        sphereRB.AddForce(transform.forward * speedInput);
-                //    }
-                //}
-                if (!isGrounded && !jumping)
+                if (!isGrounded)
                 {
                     //sphereRB.drag = 0.1f;
                     sphereRB.AddForce(Vector3.up * -gravityModifier * 100f);
 
                 }
-                if (canUse2)
-                {
-                    Jump();
-                }
+            
                 if (Mathf.Abs(speedInput) > 0)
                 {
                     //sphereRB.drag = dragOnGround;
@@ -399,6 +414,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     {
         if(currentHealth>=1)
         {
+       
             myPhotonView.RPC("RPC_TakeDamage", myPhotonView.Owner, damage);
             FindObjectOfType<SoundManager>().Play("Hit");
             //Debug.Log("callonce");
@@ -409,6 +425,8 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     void RPC_TakeDamage(float damage, PhotonMessageInfo info)
     {      
         currentHealth -= damage;
+        vignette.intensity.Override(Random.Range(0.25f, 0.40f));
+        Invoke("ResetVignette", 0.3f);
         myPhotonView.RPC("RPC_UpdateHealthBar", RpcTarget.All, currentHealth);
         //Debug.Log("takingdamage");
         FindObjectOfType<SoundManager>().Play("Hit");
@@ -425,6 +443,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 mC.ResPText();
                 mC.gameObject.GetComponent<PhotonView>().RPC("PlayerKilled", RpcTarget.All, info.Sender.NickName, info.photonView.Owner.NickName);
                 pM.Die();
+                //StopAllCoroutines();
                 //Debug.Log("healthlow");
                 if(PlayerManager.Find(info.Sender)!=null)
                 {
@@ -454,7 +473,10 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         }
        
     }
-
+    void ResetVignette()
+    {
+        vignette.intensity.Override(0.15f);
+    }
  
 
 

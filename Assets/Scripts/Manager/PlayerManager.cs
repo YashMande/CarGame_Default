@@ -68,7 +68,8 @@ public class PlayerManager : MonoBehaviour
         cC.Overlay1.fillAmount = 0;
         cC.Overlay2.fillAmount = 0;
         cC.isBoosted = false;
-        cC.jumping = false;
+        cC.ResetAfterDead();
+       // cC.portalPlaced = false;
         //Debug.Log("Dead");
     }
     public void GetKill(PhotonMessageInfo info)

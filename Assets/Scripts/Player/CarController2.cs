@@ -50,6 +50,8 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
     public GameObject abilities;
     public bool doOnce;
     public GameObject turret;
+    [SerializeField]
+    GameObject shield;
     // Start is called before the first frame update
 
     private void Awake()
@@ -89,7 +91,7 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
     {
         if(myPhotonView.IsMine)
         {
-            GetComponent<BoxCollider>().enabled = false;
+            //GetComponent<BoxCollider>().enabled = false;
             gameObject.GetComponent<BoxCollider>().enabled = false;
             speedInput = 0;
             transform.position = sphereRB.transform.position;
@@ -99,10 +101,21 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
                 Movement();
                 Shooting();
                 UpdateHealthBar();
+                if(Input.GetKeyDown(KeyCode.Space))
+                {
+                    myPhotonView.RPC("RPC_ShowShield", RpcTarget.All);
+                    shield.GetComponent<SphereCollider>().enabled = false;
+                }
             }
          
         }
              
+    }
+    [PunRPC]
+    void RPC_ShowShield()
+    {
+        shield.SetActive(true);
+        shield.GetComponent<SphereCollider>().enabled = true;
     }
     public void UpdateHealthBar()
     {

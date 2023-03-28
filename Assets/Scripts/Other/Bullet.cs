@@ -12,11 +12,12 @@ public class Bullet : MonoBehaviourPun
         pv = gameObject.GetPhotonView();
       
         Destroy(gameObject, 3f);
-        StartCoroutine(SphereColActivate());
+        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 10000);
+        //StartCoroutine(SphereColActivate());
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 1000); 
+      
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,9 +43,9 @@ public class Bullet : MonoBehaviourPun
         Destroy(gameObject);
     }
 
-    IEnumerator SphereColActivate()
-    {
-        yield return new WaitForSeconds(0.1f);
+    //IEnumerator SphereColActivate()
+    //{
+    //    yield return new WaitForSeconds(0.1f);
     
-    }
+    //}
 }

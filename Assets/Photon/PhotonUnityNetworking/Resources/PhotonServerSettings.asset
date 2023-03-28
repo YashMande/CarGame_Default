@@ -52,6 +52,8 @@ MonoBehaviour:
   - RPC_GameOver
   - RPC_TakeDamage2
   - RPC_DestroyBullet
+  - RPC_ShowShield
+  - BulkUpScale
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ramp : MonoBehaviour
 {
+    public bool isBoostPad;
+    public float jumpForce;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,13 +18,28 @@ public class Ramp : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject.layer == 2)
+        if(isBoostPad)
         {
-           
-            collision.gameObject.GetComponent<Rigidbody>().velocity = collision.gameObject.GetComponent<Rigidbody>().velocity + collision.gameObject.GetComponent<Rigidbody>().velocity + collision.gameObject.GetComponent<Rigidbody>().velocity;
-            FindObjectOfType<SoundManager>().Play("BoostPad");
+            if (other.gameObject.layer == 2)
+            {
+
+                other.gameObject.GetComponent<Rigidbody>().velocity = other.gameObject.GetComponent<Rigidbody>().velocity * 7;
+                FindObjectOfType<SoundManager>().Play("BoostPad");
+            }
         }
+        else
+        {
+            if (other.gameObject.layer == 2)
+            {
+
+                other.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce * 100);
+                FindObjectOfType<SoundManager>().Play("BoostPad");
+            }
+        }
+    
     }
+        
+    
 }
