@@ -8,6 +8,7 @@ TagManager:
   - PlayerName
   - CrosshairArea
   - Ramp
+  - Bot
   layers:
   - Default
   - TransparentFX

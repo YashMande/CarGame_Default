@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviourPun
         pv = gameObject.GetPhotonView();
       
         Destroy(gameObject, 3f);
-        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 10000);
+        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 50000);
         //StartCoroutine(SphereColActivate());
     }
     private void FixedUpdate()

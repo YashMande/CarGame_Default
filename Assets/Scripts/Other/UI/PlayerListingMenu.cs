@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
-
+using UnityEngine.UI;
 public class PlayerListingMenu : MonoBehaviourPunCallbacks
 {
     [SerializeField]
@@ -19,12 +19,18 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     [SerializeField]
     private TextMeshProUGUI _readyUpText;
     private bool _ready = false;
+    [SerializeField]
+    private Button ReadyUpButton;
+    [SerializeField]
+    ColorBlock color;
 
     public override void OnEnable()
     {
         base.OnEnable();
         SetReadyUp(false);
         GetCurrentRoomPlayers();
+   
+       
     }
     public override void OnDisable()
     {
@@ -38,16 +44,44 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     {
         _roomsCanvases = canvases;
     }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            for (int i = 0; i < _listings.Count; i++)
+            {
+                if (_listings[i].Player != PhotonNetwork.LocalPlayer)
+                {
+                    if (!_listings[i].Ready)
+                    {
+                        _readyUpText.text = "Waiting for others";
+                        return;
+                    }
+                    else
+                    {
+                        _readyUpText.text = "All Players Connected";
+                      
+                    }
+                    
+                }
+            }
+            
+        }
+    }
     private void SetReadyUp(bool state)
     {
         _ready = state;
         if (_ready)
         {
-            _readyUpText.text = "R";
+            _readyUpText.text = "Waiting for others";
         }
         else
         {
-            _readyUpText.text = "N";
+            _readyUpText.text = "Ready Up";
+
+            ReadyUpButton.colors = color;
+         
         }
     }
 
@@ -135,6 +169,10 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
             SetReadyUp(!_ready);
             base.photonView.RPC("RPC_ChangeReadyState", RpcTarget.MasterClient,PhotonNetwork.LocalPlayer,_ready);
         }
+    }
+    public void OnClick_PracticeArea()
+    {
+        PhotonNetwork.LoadLevel(2);
     }
 
     [PunRPC]

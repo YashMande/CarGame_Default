@@ -52,12 +52,22 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
     public GameObject turret;
     [SerializeField]
     GameObject shield;
+    public Material[] materials;
+
+    public float ability1Timer, ability2Timer;
+
+    public Image Overlay1, Overlay2, InvisiIMG, jumpIMG;
+    public bool canUse1, canUse2;
+    public int coolDown1, coolDown2;
+    bool onceOnly1, onceOnly2;
+    bool startOverlay1, startOverlay2;
     // Start is called before the first frame update
 
     private void Awake()
     {
         mC = GameObject.FindObjectOfType<MainCanvas>();
-
+        canUse1 = true;
+        canUse2 = true;
     }
     void Start()
     {
@@ -84,6 +94,9 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
         currentHealth = maxHealth;
         hitRaycast = gameObject.GetComponent<LookAtMouse>();
         fRate = fireRate;
+        gameObject.GetComponent<MeshRenderer>().material = materials[0];
+        Overlay1.fillAmount = 0;
+        Overlay2.fillAmount = 0;
     }
 
     // Update is called once per frame
@@ -101,21 +114,64 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
                 Movement();
                 Shooting();
                 UpdateHealthBar();
-                if(Input.GetKeyDown(KeyCode.Space))
+                if(canUse1)
                 {
-                    myPhotonView.RPC("RPC_ShowShield", RpcTarget.All);
-                    shield.GetComponent<SphereCollider>().enabled = false;
+                    Invisible();
                 }
+                if (canUse1 == false && onceOnly1 == false)
+                {
+                    onceOnly1 = true;
+                    Overlay1.fillAmount = 1;
+                    InvisiIMG.fillAmount = 1;
+                    StartCoroutine(WaitTimerAB1());
+                }
+                if (startOverlay1)
+                {
+                    Overlay1Timer();
+                }
+
             }
          
         }
              
     }
-    [PunRPC]
-    void RPC_ShowShield()
+
+    void Invisible()
     {
-        shield.SetActive(true);
-        shield.GetComponent<SphereCollider>().enabled = true;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            myPhotonView.RPC("RPC_Invisible", RpcTarget.Others,false,1);
+            canUse1 = false;
+            gameObject.GetComponent<MeshRenderer>().material = materials[1];
+
+        }
+    }
+    [PunRPC]
+    void RPC_Invisible(bool invisible,int mat)
+    {
+      
+        gameObject.GetComponent<BoxCollider>().enabled = invisible;
+        gameObject.GetComponent<MeshRenderer>().material = materials[mat];
+    }
+    IEnumerator WaitTimerAB1()
+    {
+        yield return new WaitForSeconds(ability1Timer);
+        myPhotonView.RPC("RPC_Invisible", RpcTarget.Others,true ,0);
+        gameObject.GetComponent<MeshRenderer>().material = materials[0];
+        startOverlay1 = true;
+        StartCoroutine(CoolDownTimer1());
+    }
+    void Overlay1Timer()
+    {
+        Overlay1.fillAmount = Overlay1.fillAmount - 0.142f * Time.deltaTime;
+    }
+
+    IEnumerator CoolDownTimer1()
+    {
+        yield return new WaitForSeconds(coolDown1);
+        canUse1 = true;
+        onceOnly1 = false;
+        startOverlay1 = false;
     }
     public void UpdateHealthBar()
     {
@@ -240,6 +296,10 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
                 if (PlayerManager2.Find(info.Sender) != null)
                 {
                     PlayerManager2.Find(info.Sender).GetKill(info);
+                }
+                if (PlayerManager3.Find(info.Sender) != null)
+                {
+                    PlayerManager3.Find(info.Sender).GetKill(info);
                 }
                 gameObject.SetActive(false);
             }

@@ -90,7 +90,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         pM = gameObject.GetComponentInParent<PlayerManager>();     
         myPhotonView = gameObject.GetComponent<PhotonView>();
         nickName.text = photonView.Owner.NickName;
-        PortalTImer = portalTimer;
+        //PortalTImer = portalTimer;
         if (!myPhotonView.IsMine)
         {         
             cam.enabled = false;
@@ -344,8 +344,34 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                         {
                             fireRate = fRate;
                             PhotonNetwork.Instantiate("HitEffect", hitRaycast.hitInfo.point, Quaternion.identity);
-
+                            
                             if (hitRaycast.hitInfo.collider.gameObject.tag == "Player")
+                            {
+                                GameObject hitObj = hitRaycast.hitInfo.collider.gameObject;
+                                if(hitObj.GetComponent<CarController3>()!= null)
+                                {
+                                    if (hitObj.GetComponent<CarController3>().canDamage == true)
+                                    {
+                                        if(currentHealth>=20)
+                                        {
+                                            gameObject.GetComponent<IDamageble>()?.TakeDamage(damage);
+                                        }
+                                    
+                                    }
+                                    else
+                                    {
+                                        hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(damage);
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(damage);
+                                }
+                                
+                            }
+                            if(hitRaycast.hitInfo.collider.gameObject.tag == "Bot")
                             {
                                 hitRaycast.hitInfo.collider.gameObject.GetComponent<IDamageble>()?.TakeDamage(damage);
                             }
@@ -453,10 +479,14 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 {
                     PlayerManager2.Find(info.Sender).GetKill(info);
                 }
+                if (PlayerManager3.Find(info.Sender) != null)
+                {
+                    PlayerManager3.Find(info.Sender).GetKill(info);
+                }
 
                 //PlayerManager2.Find(info.Sender).GetKill(info);
                 //currentHealth = 0;         
-                
+
                 gameObject.SetActive(false);
             }     
         }
