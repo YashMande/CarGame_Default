@@ -33,7 +33,7 @@ public class RotateWithCam3 : MonoBehaviour
 
         if (cC.speedInput > 0)
         {
-            if (cmv.m_Lens.FieldOfView <= 90)
+            if (cmv.m_Lens.FieldOfView <= 110)
             {
                 speed_particleSystem.SetActive(true);
                 cmSpeed = cmSpeed + 1.5f * Time.deltaTime;

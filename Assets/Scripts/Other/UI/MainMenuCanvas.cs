@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
-
+using UnityEngine.Analytics;
 public class MainMenuCanvas : MonoBehaviour
 {
     public GameObject mainMenu;
@@ -20,6 +20,7 @@ public class MainMenuCanvas : MonoBehaviour
     }
     public void OnClick_PlayButton()
     {
+   
         FindObjectOfType<SoundManager>().Play("Click");
         mainMenu.SetActive(false);
         enterName.SetActive(true);
@@ -38,7 +39,14 @@ public class MainMenuCanvas : MonoBehaviour
         cOrJRoom.GetComponent<CanvasGroup>().interactable = true;
         cOrJRoom.GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
-
+    public void OnClick_BackButton()
+    {
+        FindObjectOfType<SoundManager>().Play("Click");
+        mainMenu.SetActive(true);
+        cOrJRoom.GetComponent<CanvasGroup>().alpha = 0;
+        cOrJRoom.GetComponent<CanvasGroup>().interactable = false;
+        cOrJRoom.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
 
 
 }

@@ -14,12 +14,12 @@ public class SingletonScriptableObject<T> : ScriptableObject where T : Scriptabl
                 T[] results = Resources.FindObjectsOfTypeAll<T>();
                 if(results.Length ==0)
                 {
-                    Debug.LogError("SingletonScriptableObject -> instance -> results lenght is 0 for type" + typeof(T).ToString() + ".");
+                  
                     return null;
                 }
                 if(results.Length >1)
                 {
-                    Debug.LogError("SingletonScriptableObject -> instance -> results lenght is greater than 1 for type" + typeof(T).ToString() + ".");
+                    
                     return null;
                 }
                 _instance = results[0];

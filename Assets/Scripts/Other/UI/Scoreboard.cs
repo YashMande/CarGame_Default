@@ -19,7 +19,7 @@ public class Scoreboard : MonoBehaviourPunCallbacks
             AddScoreBoardItem(player);
         }
     }
-
+    
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -58,5 +58,6 @@ public class Scoreboard : MonoBehaviourPunCallbacks
         {
             canvasGroup.alpha = 0;
         }
+    
     }
 }

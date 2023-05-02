@@ -10,7 +10,13 @@ public class GameManager : MonoBehaviourPun
     PhotonView pV;
     public bool gameEnded;
     public string playerWon;
-  public  int playerSelected;
+    public  int playerSelected;
+
+    //public int p1Kills;
+    //public int p2Kills;
+    //public int p3Kills;
+    //public int p4Kills;
+    //public int p5Kills;
     // Start is called before the first frame update
     void Awake()
     {

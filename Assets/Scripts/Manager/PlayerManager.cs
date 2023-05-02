@@ -6,9 +6,11 @@ using Photon.Pun;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
+using UnityEngine.Analytics;
 public class PlayerManager : MonoBehaviour
 {
     public Vector3 transformPM;
+    Quaternion rotationn;
     PhotonView PV;
     [SerializeField]
     public int kills;
@@ -19,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject deathEffect;
 
     GameManager gm;
+    bool once;
     // Start is called before the first frame update
     void Awake()
     {
@@ -29,6 +32,7 @@ public class PlayerManager : MonoBehaviour
         gameObject.transform.position = SpawnManager.Instance.spawnPoints[characterID].transform.position;
         gameObject.transform.rotation = SpawnManager.Instance.spawnPoints[characterID].transform.rotation;
         transformPM = this.gameObject.transform.position;
+        rotationn = this.gameObject.transform.rotation;
         //Debug.Log(PV.OwnerActorNr + "ggg");
     }
     private void Start()
@@ -40,10 +44,12 @@ public class PlayerManager : MonoBehaviour
     {
         PhotonNetwork.Instantiate("DeathEffect", cC.gameObject.transform.position, Quaternion.identity);
         cC.gameObject.SetActive(false);
+   
         deaths++;
         Hashtable hash = new Hashtable();
         hash.Add("deaths", deaths);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
     }
 
     public void RespawnS()
@@ -58,6 +64,8 @@ public class PlayerManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         cC.sphereRB.gameObject.transform.position = transformPM;
+        cC.gameObject.transform.rotation = rotationn;
+          cC.sphereRB.gameObject.transform.rotation = rotationn;
         yield return new WaitForSeconds(0.5f);
         cC.gameObject.SetActive(true);      
         cC.currentHealth = cC.maxHealth;
@@ -89,6 +97,27 @@ public class PlayerManager : MonoBehaviour
         Hashtable hash = new Hashtable();
         hash.Add("kills", kills);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        
+        //if(cC.photonView.OwnerActorNr == 1)
+        //{
+        //    gm.p1Kills++;
+        //}
+        //else if(cC.photonView.OwnerActorNr == 2)
+        //{
+        //    gm.p2Kills++;
+        //}
+        //else if (cC.photonView.OwnerActorNr == 3)
+        //{
+        //    gm.p3Kills++;
+        //}
+        //else if (cC.photonView.OwnerActorNr == 4)
+        //{
+        //    gm.p4Kills++;
+        //}
+        //else if (cC.photonView.OwnerActorNr == 5)
+        //{
+        //    gm.p5Kills++;
+        //}
     }
 
    public static PlayerManager Find(Player player)
@@ -96,7 +125,7 @@ public class PlayerManager : MonoBehaviour
         return FindObjectsOfType<PlayerManager>().SingleOrDefault(x => x.PV.Owner == player);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(kills >= gm.maxKills)
         {
@@ -106,6 +135,36 @@ public class PlayerManager : MonoBehaviour
         if(gm.gameEnded)
         {
             cC.enabled = false;
+            if(once == false)
+            {
+                if(PV.IsMine)
+                {
+                    once = true;
+                    AnalyticsResult analyticsResult = Analytics.CustomEvent(
+           "KillsWithSpeedSter",
+            new Dictionary<string, object> { { "SpeedSterKiils", kills } });
+
+
+                    AnalyticsResult analyticsResult2 = Analytics.CustomEvent(
+   "DeathsWithSpeedSter",
+   new Dictionary<string, object> { { "SpeedSterDeaths", deaths } });
+
+
+                    AnalyticsResult analyticsResult3 = Analytics.CustomEvent(
+"TurboChargeAbility",
+new Dictionary<string, object> { { "TurboCharge", cC.ability1Used } });
+
+                    AnalyticsResult analyticsResult4 = Analytics.CustomEvent(
+"FreezeAbility",
+new Dictionary<string, object> { { "Freeze", cC.ability2Used } });
+
+
+
+
+
+                }
+
+            }
             
         }
     }

@@ -21,6 +21,7 @@ public class Instantiate : MonoBehaviour
         Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
         Vector2 offset = Random.insideUnitCircle * 50f;
         Vector3 position = new Vector3(transform.position.x + offset.x, transform.position.y, transform.position.z);
+        
         if (gm.playerSelected == 0)
         {
             MasterManager.NetworkInstantiate(_prefab0, spawnPoint.position, spawnPoint.rotation);

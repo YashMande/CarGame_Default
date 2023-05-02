@@ -22,6 +22,8 @@ public class MainCanvas : MonoBehaviourPun
     GameManager gM;
     bool gameEnd;
     public TextMeshProUGUI playerName;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -154,5 +156,10 @@ public class MainCanvas : MonoBehaviourPun
         GameObject prefab = PhotonNetwork.Instantiate("KillFeedPrefab", KillFeedArea.position, KillFeedArea.rotation);
         prefab.transform.SetParent(KillFeedArea);
         prefab.GetComponent<PhotonView>().RPC("UpdateNames", RpcTarget.All,killer,killed);
+    }
+
+    public void OnClick_HomeButton()
+    {
+        PhotonNetwork.LoadLevel(0);
     }
 }

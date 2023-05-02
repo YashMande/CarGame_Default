@@ -4,17 +4,24 @@ using UnityEngine;
 using TMPro;
 using Photon.Realtime;
 using Photon.Pun;
+using UnityEngine.UI;
 public class PlayerListing : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     private TextMeshProUGUI _text;
     public Player Player { get; private set; }
     public bool Ready = false;
-
+    public GameObject readyICon;
+    public GameObject masterClienticon;
+    private void Start()
+    {
+     
+    }
     public void SetPlayerInfo(Player player)
     {
         Player = player;
         SetPlayerText(player);
+        
     }
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
@@ -32,4 +39,5 @@ public class PlayerListing : MonoBehaviourPunCallbacks
             result = (int)player.CustomProperties["RandomNumber"];
         _text.text = player.NickName;
     }
+
 }

@@ -31,7 +31,7 @@ public class CreateRoomMenu : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         //base.OnCreatedRoom();
-        Debug.Log("Created room successs", this);
+
         _roomCanvases.CurrentRoomCanvas.Show();
         gameObject.GetComponentInParent<CanvasGroup>().alpha = 0;
         gameObject.GetComponentInParent<CanvasGroup>().interactable = false;
@@ -41,7 +41,7 @@ public class CreateRoomMenu : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         //base.OnCreateRoomFailed(returnCode, message);
-        Debug.Log("Room Creation failed:"+ message, this);
+    
     }
 
 }

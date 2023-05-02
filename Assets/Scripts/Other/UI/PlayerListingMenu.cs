@@ -23,14 +23,14 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     private Button ReadyUpButton;
     [SerializeField]
     ColorBlock color;
-
+ 
     public override void OnEnable()
     {
         base.OnEnable();
         SetReadyUp(false);
         GetCurrentRoomPlayers();
-   
-       
+        base.photonView.RPC("RPC_MasterClient", RpcTarget.All);
+
     }
     public override void OnDisable()
     {
@@ -43,12 +43,23 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     public void FirstInitialize(RoomsCanvases canvases)
     {
         _roomsCanvases = canvases;
+        
     }
 
     private void Update()
     {
+        
         if (PhotonNetwork.IsMasterClient)
         {
+            ReadyUpButton.interactable = false;
+            if(PhotonNetwork.CurrentRoom.PlayerCount <=1)
+            {
+                ReadyUpButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                ReadyUpButton.gameObject.SetActive(true);
+            }
             for (int i = 0; i < _listings.Count; i++)
             {
                 if (_listings[i].Player != PhotonNetwork.LocalPlayer)
@@ -103,6 +114,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     }
     private void AddPlayerListing(Player player)
     {
+        base.photonView.RPC("RPC_MasterClient", RpcTarget.All);
         int index = _listings.FindIndex(x => x.Player == player);
         if(index!= -1)
         {
@@ -128,6 +140,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+      
         AddPlayerListing(newPlayer);
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -167,7 +180,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
         {
             FindObjectOfType<SoundManager>().Play("Click");
             SetReadyUp(!_ready);
-            base.photonView.RPC("RPC_ChangeReadyState", RpcTarget.MasterClient,PhotonNetwork.LocalPlayer,_ready);
+            base.photonView.RPC("RPC_ChangeReadyState", RpcTarget.All,PhotonNetwork.LocalPlayer,_ready);
         }
     }
     public void OnClick_PracticeArea()
@@ -182,9 +195,23 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
         if (index != -1)
         {
             _listings[index].Ready = ready;
-          
+            _listings[index].readyICon.SetActive(ready);
         }
     }
-    
-    
+    [PunRPC]
+    void RPC_MasterClient()
+    {
+
+        for (int i = 0; i < _listings.Count; i++)
+        {
+            if (_listings[i].Player == PhotonNetwork.MasterClient)
+            {
+
+                _listings[i].masterClienticon.SetActive(true);
+            }
+         
+        }
+    }
+
+
 }

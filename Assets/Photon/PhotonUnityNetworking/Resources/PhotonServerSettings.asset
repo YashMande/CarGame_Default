@@ -58,6 +58,17 @@ MonoBehaviour:
   - BulkUpScale2
   - RPC_TakeDamage3
   - VortexAblity
+  - AreaDamageAbility
+  - RPC_ForwardAccel
+  - RPC_TakeDamage55
+  - RPC_Heal
+  - ShowLaser
+  - RPC_ShowLaser
+  - RPC_ShowOpen
+  - RPC_MasterClient
+  - RPC_CannotTakeDamage
+  - RPC_CannotTakeDamage2
+  - RPC_CannotTakeDamage3
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

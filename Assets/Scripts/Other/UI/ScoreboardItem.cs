@@ -11,7 +11,7 @@ public class ScoreboardItem : MonoBehaviourPunCallbacks
     public TMP_Text userNameText;
     public TMP_Text killsText;
     public TMP_Text deathText;
-
+    public TMP_Text pingText;
 
     Player player;
     public void Initialize(Player player)
@@ -20,11 +20,17 @@ public class ScoreboardItem : MonoBehaviourPunCallbacks
         this.player = player;
         UpdateStat();
     }
+
+    private void LateUpdate()
+    {
+        pingText.text = PhotonNetwork.GetPing().ToString();
+    }
     void UpdateStat()
     {
         if(player.CustomProperties.TryGetValue("kills", out object kills))
         {
             killsText.text = kills.ToString();
+          
         }
 
         if (player.CustomProperties.TryGetValue("deaths", out object deaths))

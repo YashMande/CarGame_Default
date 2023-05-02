@@ -9,6 +9,7 @@ TagManager:
   - CrosshairArea
   - Ramp
   - Bot
+  - Stand
   layers:
   - Default
   - TransparentFX
@@ -28,9 +29,9 @@ TagManager:
   - Shield
   - Minimap
   - Player
-  - 
-  - 
-  - 
+  - AreaDam
+  - Building
+  - Stand
   - 
   - 
   - 

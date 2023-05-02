@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TMPro; 
+using TMPro;
+using UnityEngine.Analytics;
 public class CharacterSelectCanvas : MonoBehaviour
 {
     public GameObject car1, car2, car3;
@@ -11,6 +12,7 @@ public class CharacterSelectCanvas : MonoBehaviour
     GameManager gm;
     public TextMeshProUGUI carName;
     public GameObject stats1, stats2, stats3;
+    public TextMeshProUGUI selectedRider;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +24,8 @@ public class CharacterSelectCanvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(carSelectedNumber == 0)
+        selectedRider.text = carName.text;
+        if (carSelectedNumber == 0)
         {
             car1.SetActive(true);
             car2.SetActive(false);
@@ -40,7 +43,7 @@ public class CharacterSelectCanvas : MonoBehaviour
             stats2.SetActive(true);
             stats1.SetActive(false);
             stats3.SetActive(false);
-            carName.text = "Fatty";
+            carName.text = "Titan";
         }
         else if(carSelectedNumber ==2)
         {
@@ -50,7 +53,7 @@ public class CharacterSelectCanvas : MonoBehaviour
             stats3.SetActive(true);
             stats2.SetActive(false);
             stats1.SetActive(false);
-            carName.text = "Heal";
+            carName.text = "Pulsar";
         }
     }
 
@@ -81,5 +84,7 @@ public class CharacterSelectCanvas : MonoBehaviour
     {
         selectionScreen.SetActive(false);
         gm.playerSelected = carSelectedNumber;
+
+
     }
 }

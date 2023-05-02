@@ -43,4 +43,9 @@ public class Bot : MonoBehaviourPun,IDamageble
         turret.SetActive(true);
 
     }
+
+    public void FwdAccel(float speed)
+    {
+        throw new System.NotImplementedException();
+    }
 }

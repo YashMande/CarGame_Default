@@ -7,12 +7,14 @@ public class Bullet : MonoBehaviourPun
 {
     public GameObject notHitOBJ;
     PhotonView pv;
+    public float speed;
+    public float damm;
     private void Start()
     {
         pv = gameObject.GetPhotonView();
-      
+        
         Destroy(gameObject, 3f);
-        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 50000);
+        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
         //StartCoroutine(SphereColActivate());
     }
     private void FixedUpdate()
@@ -24,14 +26,32 @@ public class Bullet : MonoBehaviourPun
     {
 
 
-       
-            if (other.gameObject.tag == "Player")
-            {
-                other.gameObject.GetComponent<IDamageble>()?.TakeDamage(20);
-            }
-
-
         pv.RPC("RPC_DestroyBullet", RpcTarget.All);
+
+        if (other.gameObject.tag == "Player")
+        {
+            if (other.gameObject.GetComponent<CarController3>())
+            {
+                if (other.gameObject.GetComponent<CarController3>().canDamage == true)
+                {
+
+
+                    notHitOBJ.GetComponent<IDamageble>()?.TakeDamage(damm);
+
+                }
+                else
+                {
+                    other.gameObject.GetComponent<IDamageble>()?.TakeDamage(damm);
+                }
+            }
+            else
+            {
+                other.gameObject.GetComponent<IDamageble>()?.TakeDamage(damm);
+            }
+           
+        }
+
+
 
 
 

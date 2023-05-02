@@ -4,12 +4,19 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class TestConnect : MonoBehaviourPunCallbacks
 {
+    public GameObject StartGame;
+    public GameObject Extra;
     // Start is called before the first frame update
     void Start()
     {
+       if(Application.loadedLevel == 0)
+        {
+            StartGame.SetActive(false);
+        }
+     
         ////print("Connecting To Server");
         PhotonNetwork.SendRate = 40; //20
         PhotonNetwork.SerializationRate = 20;//10
@@ -22,14 +29,15 @@ public class TestConnect : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        base.OnConnectedToMaster();   
-        //print("Connected To Server");
-     
-        if(!PhotonNetwork.InLobby)
+        base.OnConnectedToMaster();
+        StartGame.SetActive(true);
+        Extra.SetActive(false);
+        if (!PhotonNetwork.InLobby)
         {
             
             PhotonNetwork.JoinLobby();
         }
+    
 
         
     

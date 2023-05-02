@@ -5,6 +5,7 @@ using Photon.Pun;
 public class ChargedShot : MonoBehaviour
 {
     float maxScale;
+    GameObject obj;
     public bool bullet;
     // Start is called before the first frame update
     void Start()
@@ -46,10 +47,14 @@ public class ChargedShot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PhotonNetwork.Destroy(gameObject);
+       
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<IDamageble>()?.TakeDamage(20);
+                obj = other.gameObject;
+                other.gameObject.GetComponent<IDamageble>()?.FwdAccel(0);
+                  
         }
+        PhotonNetwork.Destroy(gameObject);
     }
+
 }

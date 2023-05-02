@@ -6,9 +6,11 @@ using Photon.Pun;
 using System.Linq;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
+using UnityEngine.Analytics;
 public class PlayerManager3 : MonoBehaviour
 {
     public Vector3 transformPM;
+    Quaternion rotationn;
     PhotonView PV;
     [SerializeField]
     public int kills;
@@ -17,7 +19,7 @@ public class PlayerManager3 : MonoBehaviour
     [SerializeField]
     int characterID;
     public GameObject deathEffect;
-
+    bool once;
     GameManager gm;
     // Start is called before the first frame update
     void Awake()
@@ -44,6 +46,7 @@ public class PlayerManager3 : MonoBehaviour
         Hashtable hash = new Hashtable();
         hash.Add("deaths", deaths);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
     }
 
     public void RespawnS()
@@ -58,6 +61,8 @@ public class PlayerManager3 : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         cC.sphereRB.gameObject.transform.position = transformPM;
+        cC.gameObject.transform.rotation = rotationn;
+        cC.sphereRB.gameObject.transform.rotation = rotationn;
         yield return new WaitForSeconds(0.5f);
         cC.gameObject.SetActive(true);
         cC.currentHealth = cC.maxHealth;
@@ -69,6 +74,7 @@ public class PlayerManager3 : MonoBehaviour
         cC.Overlay2.fillAmount = 0;
         cC.isBoosted = false;
         cC.ResetAfterDead();
+      
         // cC.portalPlaced = false;
         //Debug.Log("Dead");
     }
@@ -84,11 +90,12 @@ public class PlayerManager3 : MonoBehaviour
     void RPC_GetKill()
     {
         FindObjectOfType<SoundManager>().Play("Blast");
-        Debug.Log("kill");
+  
         kills = kills + 1;
         Hashtable hash = new Hashtable();
         hash.Add("kills", kills);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
     }
 
     public static PlayerManager3 Find(Player player)
@@ -106,6 +113,29 @@ public class PlayerManager3 : MonoBehaviour
         if (gm.gameEnded)
         {
             cC.enabled = false;
+            if(once == false)
+            {
+                if(PV.IsMine)
+                {
+                    once = true;
+                    AnalyticsResult analyticsResult = Analytics.CustomEvent(
+"KillsWithPulsar",
+new Dictionary<string, object> { { "PulsarKills", kills } });
+
+
+                    AnalyticsResult analyticsResult2= Analytics.CustomEvent(
+"DeathsWithPulsar",
+new Dictionary<string, object> { { "PulsarDeaths", deaths } });
+
+                    AnalyticsResult analyticsResult3 = Analytics.CustomEvent(
+"DeflectorAbility",
+new Dictionary<string, object> { { "Deflector", cC.ability1Used } });
+
+                    AnalyticsResult analyticsResult4 = Analytics.CustomEvent(
+"ToxicCloudAbility",
+new Dictionary<string, object> { { "ToxicCloud", cC.ability2Used } });
+                }
+            }
 
         }
     }

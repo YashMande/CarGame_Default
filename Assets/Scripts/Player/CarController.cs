@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Realtime;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Analytics;
 public class CarController : MonoBehaviourPunCallbacks , IDamageble
 {
     [SerializeField]
@@ -17,13 +18,11 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     [SerializeField]
     private CinemachineVirtualCamera cam;
 
-    public float fwdAccel, bckAccel, maxSpeed, turnStrength, gravityModifier, dragOnGround;
+    public float fwdAccel, bckAccel, maxSpeed, turnStrength, gravityModifier, dragOnGround,maxfwdSpeed;
     public float speedInput, turnInput;
     public Vector3 offset;
     public float fireRate;
     private float fRate;
-    public float portalTimer;
-    private float PortalTImer;
     public bool isGrounded;
     public LayerMask whatIsGround;
     public float groundRayLength;
@@ -66,7 +65,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public MainCanvas mC;
 
     //Audio
-    AudioSource engineSound;
+     AudioSource engineSound;
     AudioSource shootSound;
     float minimunPitch = 0.4f;
     float maxPitach = 3.5f;
@@ -75,12 +74,19 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     public GameObject chargedShotPrefab;
     PostProcessVolume PPV;
      Vignette vignette;
+    public TMP_Text info;
+    bool allowMove;
+    bool stand;
+    bool cannotShoot;
+
+    public int ability1Used;
+    public int ability2Used;
     private void Awake()
     {
         mC = GameObject.FindObjectOfType<MainCanvas>();
         canUse1 = true;
         canUse2 = true;
-
+        
     }
     public void Start()
     {
@@ -90,7 +96,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         pM = gameObject.GetComponentInParent<PlayerManager>();     
         myPhotonView = gameObject.GetComponent<PhotonView>();
         nickName.text = photonView.Owner.NickName;
-        //PortalTImer = portalTimer;
+        
         if (!myPhotonView.IsMine)
         {         
             cam.enabled = false;
@@ -109,6 +115,8 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             engineSound = FindObjectOfType<SoundManager>().sounds[0].source;
             shootSound = FindObjectOfType<SoundManager>().sounds[1].source;
             engineSound.Play();
+            info.gameObject.SetActive(false);
+
         }        
         hitRaycast = gameObject.GetComponent<LookAtMouse>();
         pvtFwdAccel = fwdAccel;
@@ -120,6 +128,9 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         transform.position = sphereRB.transform.position;
         engineSound.pitch = minimunPitch;
         canShoot = true;
+        AnalyticsResult analyticsResult = Analytics.CustomEvent(
+"SpeedsterSelected",
+new Dictionary<string, object> { { "SpeedsterSelected", 1 } });
     }
 
     public void Update()
@@ -175,18 +186,18 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     }
     void Overlay1Timer()
     {      
-        Overlay1.fillAmount = Overlay1.fillAmount - 0.142f * Time.deltaTime;
+        Overlay1.fillAmount = Overlay1.fillAmount - 0.067f * Time.deltaTime;
     }
     void Overlay2Timer()
     {
-        Overlay2.fillAmount = Overlay2.fillAmount -0.15f* Time.deltaTime;
+        Overlay2.fillAmount = Overlay2.fillAmount -0.125f* Time.deltaTime;
     }
    IEnumerator WaitTimerAB1()
     {       
         yield return new WaitForSeconds(ability1Timer);
         myPhotonView.RPC("BulkUpScale", RpcTarget.All,0);
-        damage = 10;
-        fireRate = 0.08f;
+        fwdAccel = pvtFwdAccel ;
+     
         startOverlay1 = true;
         StartCoroutine(CoolDownTimer());
     }
@@ -203,8 +214,8 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         canUse1 = true;
         onceOnly1 = false;
         startOverlay1 = false;
-        damage = 10;
-        fireRate = 0.08f;
+        fwdAccel = pvtFwdAccel;
+        bckAccel = pvtFwdAccel;
         myPhotonView.RPC("BulkUpScale", RpcTarget.All,0);
     }
     IEnumerator WaitTimerAB2()
@@ -216,7 +227,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     }
     IEnumerator CoolDownTimer2()
     {
-        yield return new WaitForSeconds(coolDown1);
+        yield return new WaitForSeconds(coolDown2);
         canUse2 = true;
         onceOnly2 = false;
         startOverlay2 = false;
@@ -283,11 +294,10 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
-          
-            canUse1 = false;       
-           // gameObject.GetComponent<MeshRenderer>().material = materials[1];
-            damage = 25;
-            fireRate = 0.05f;
+
+            ability1Used++;
+            canUse1 = false;
+            fwdAccel = maxfwdSpeed;
             FindObjectOfType<SoundManager>().Play("BulkUp");
             myPhotonView.RPC("BulkUpScale", RpcTarget.All,1);
          
@@ -303,11 +313,13 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            ability2Used++;
+
             canUse2 = false;
             canShoot = false;
             chargedShot.SetActive(true);
-            Invoke("ShootChagedShot", 2);
-           // Instantiate(chargedShot,barrelEffect.transform.position,)
+            ShootChagedShot();
+
         }
     }
     void ShootChagedShot()
@@ -403,21 +415,56 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
             if (Physics.Raycast(groundRayPoint.position, -transform.up, out hit, groundRayLength, whatIsGround))
             {
                 isGrounded = true;
+                stand = false;
+                myPhotonView.RPC("RPC_CannotTakeDamage", RpcTarget.All, false);
 
             }
+        
             if (mC.gameStarted)
             {
-
-                if (!isGrounded)
+                if (Physics.Raycast(groundRayPoint.position, -transform.up, out hit))
                 {
-                    //sphereRB.drag = 0.1f;
-                    sphereRB.AddForce(Vector3.up * -gravityModifier * 100f);
+                   
+                    if (hit.collider.gameObject.tag == "Stand")
+                    {
+                        myPhotonView.RPC("RPC_CannotTakeDamage", RpcTarget.All, true);
+                        stand = true;
+                        cannotShoot = false;
+                        canShoot = false;
+                        info.gameObject.SetActive(true);
+                        info.text = "Reach to the ground to start Shooting";
+                        onceOnly1 = true;
+                        onceOnly2 = true;
+                        canUse1 = false;
+                        canUse2 = false;
 
-                }
+                    }
+                    if (stand)
+                    {
+                        sphereRB.AddForce(Vector3.up * -gravityModifier * 250f);
+                    }
+                    else
+                    {
+                        sphereRB.AddForce(Vector3.up * -gravityModifier * 100f);
+                        if(cannotShoot== false)
+                        {
+                            cannotShoot = true;
+                            canShoot = true;
+                            info.text = "Shooting Active";
+                            Invoke("StopInfoText", 1.5f);
+                            onceOnly1 = false;
+                            onceOnly2 = false;
+                            canUse1 = true;
+                            canUse2 = true;
+                        }
+                    }
+
+                 }
             
+                
                 if (Mathf.Abs(speedInput) > 0)
                 {
-                    //sphereRB.drag = dragOnGround;
+                 
                     sphereRB.AddForce(transform.forward * speedInput);
                 }
             }
@@ -426,25 +473,33 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         }  
            
     }
+    void StopInfoText()
+    {
+        info.gameObject.SetActive(false);
+    }
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
         if(changedProps.ContainsKey("itemIndex") && myPhotonView.IsMine && targetPlayer == myPhotonView.Owner)
         {
-            //Debug.Log("jj");
+          
         }
     }
 
 
     public void TakeDamage(float damage)
     {
-        if(currentHealth>=1)
+        if(stand == false)
         {
-       
-            myPhotonView.RPC("RPC_TakeDamage", myPhotonView.Owner, damage);
-            FindObjectOfType<SoundManager>().Play("Hit");
-            //Debug.Log("callonce");
+            if (currentHealth >= 1)
+            {
+
+                myPhotonView.RPC("RPC_TakeDamage", myPhotonView.Owner, damage);
+                FindObjectOfType<SoundManager>().Play("Hit");
+
+            }
         }
+
     }
 
     [PunRPC]
@@ -454,23 +509,22 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         vignette.intensity.Override(Random.Range(0.25f, 0.40f));
         Invoke("ResetVignette", 0.3f);
         myPhotonView.RPC("RPC_UpdateHealthBar", RpcTarget.All, currentHealth);
-        //Debug.Log("takingdamage");
         FindObjectOfType<SoundManager>().Play("Hit");
         if (currentHealth <=0)
         {
          
             if(doOnce == false)
             {
-                //Debug.Log("gg" + info.Sender);
-                //Debug.Log("ff" + info.photonView.Owner);
+         
                 FindObjectOfType<SoundManager>().Play("Blast");
-                //mC.PlayerKilled(info.Sender.NickName, info.photonView.Owner.NickName);
+                shootSound.Stop();
+                engineSound.Stop();
+                barrelEffect.SetActive(false);
+                isShooting = false;
                 doOnce = true;
                 mC.ResPText();
                 mC.gameObject.GetComponent<PhotonView>().RPC("PlayerKilled", RpcTarget.All, info.Sender.NickName, info.photonView.Owner.NickName);
                 pM.Die();
-                //StopAllCoroutines();
-                //Debug.Log("healthlow");
                 if(PlayerManager.Find(info.Sender)!=null)
                 {
                     PlayerManager.Find(info.Sender).GetKill(info);
@@ -482,10 +536,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
                 if (PlayerManager3.Find(info.Sender) != null)
                 {
                     PlayerManager3.Find(info.Sender).GetKill(info);
-                }
-
-                //PlayerManager2.Find(info.Sender).GetKill(info);
-                //currentHealth = 0;         
+                }       
 
                 gameObject.SetActive(false);
             }     
@@ -507,9 +558,45 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
     {
         vignette.intensity.Override(0.15f);
     }
- 
 
+    public void FwdAccel(float speed)
+    {
+        myPhotonView.RPC("RPC_ForwardAccel", myPhotonView.Owner, speed);
+       
+    }
+    [PunRPC]
+    void RPC_ForwardAccel(float speed)
+    {
+        fwdAccel = speed;
+        bckAccel = speed;
+        StartCoroutine(AllowMoving());
+    }
+    IEnumerator AllowMoving()
+    {
+        if(allowMove == false)
+        {
+            info.gameObject.SetActive(true);
+            allowMove = true;
 
+            info.text = "Engine Down, Can Move in 3";
+            yield return new WaitForSeconds(1f);
+            info.text = "Engine Down, Can Move in 2";
+            yield return new WaitForSeconds(1f);
+            info.text = "Engine Down, Can Move in 1";
+            yield return new WaitForSeconds(1f);
+            info.gameObject.SetActive(false);
+            myPhotonView.RPC("RPC_ForwardAccel", myPhotonView.Owner, pvtFwdAccel);
+            allowMove = false;
+            StopCoroutine(AllowMoving());
+        }
+    
+
+    }
+    [PunRPC]
+    void RPC_CannotTakeDamage(bool stands)
+    {
+        stand = stands;
+    }
 }
 
 
