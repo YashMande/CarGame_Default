@@ -51,6 +51,10 @@ public class MainCanvas : MonoBehaviourPun
                 }
 
             }
+            else
+            {
+                currentTime = 0;
+            }
         }
         else
         {

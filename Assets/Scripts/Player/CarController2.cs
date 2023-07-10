@@ -128,9 +128,8 @@ public class CarController2 : MonoBehaviourPunCallbacks, IDamageble
         transform.position = sphereRB.transform.position;
         engineSound.pitch = minimunPitch;
         canShoot = true;
-        AnalyticsResult analyticsResult = Analytics.CustomEvent(
-"TitanSelected",
-new Dictionary<string, object> { { "TitanSelected", 1 } });
+    
+
     }
 
     public void Update()
@@ -228,6 +227,7 @@ new Dictionary<string, object> { { "TitanSelected", 1 } });
         bckAccel = pvtFwdAccel;
         damage = 20;
         fRate = 0.1f;
+        engineSound.Play();
         myPhotonView.RPC("RPC_Invisible", RpcTarget.Others, 0);
         gameObject.GetComponent<MeshRenderer>().material = materials[0];
     }

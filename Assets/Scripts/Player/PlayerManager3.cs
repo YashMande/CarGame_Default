@@ -118,22 +118,19 @@ public class PlayerManager3 : MonoBehaviour
                 if(PV.IsMine)
                 {
                     once = true;
-                    AnalyticsResult analyticsResult = Analytics.CustomEvent(
-"KillsWithPulsar",
-new Dictionary<string, object> { { "PulsarKills", kills } });
+                    Analytics.CustomEvent("PulsarSelected", new Dictionary<string, object> { { "Pulsar", 2 } });
+                    Analytics.CustomEvent("KillsWithPulsar", new Dictionary<string, object> { { "PulsarKills", kills * 2 } });
+                    Analytics.CustomEvent("DeathsWithPulsar", new Dictionary<string, object> { { "PulsarDeaths", deaths * 2 } });
+                    Analytics.CustomEvent("DeflectorAbility", new Dictionary<string, object> { { "Deflector", cC.ability1Used * 2 } });
+                    Analytics.CustomEvent("ToxicCloudAbility", new Dictionary<string, object> { { "ToxicCloud", cC.ability2Used * 2 } });
+                    Analytics.FlushEvents();
 
 
-                    AnalyticsResult analyticsResult2= Analytics.CustomEvent(
-"DeathsWithPulsar",
-new Dictionary<string, object> { { "PulsarDeaths", deaths } });
 
-                    AnalyticsResult analyticsResult3 = Analytics.CustomEvent(
-"DeflectorAbility",
-new Dictionary<string, object> { { "Deflector", cC.ability1Used } });
 
-                    AnalyticsResult analyticsResult4 = Analytics.CustomEvent(
-"ToxicCloudAbility",
-new Dictionary<string, object> { { "ToxicCloud", cC.ability2Used } });
+
+
+
                 }
             }
 

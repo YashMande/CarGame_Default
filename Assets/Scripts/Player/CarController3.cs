@@ -137,9 +137,7 @@ public class CarController3 : MonoBehaviourPunCallbacks, IDamageble
         transform.position = sphereRB.transform.position;
         engineSound.pitch = minimunPitch;
         canShoot = true;
-        AnalyticsResult analyticsResult = Analytics.CustomEvent(
-"PulsarSelected",
-new Dictionary<string, object> { { "PulsarSelected", 1 } });
+
     }
 
     public void Update()
@@ -228,6 +226,7 @@ new Dictionary<string, object> { { "PulsarSelected", 1 } });
         canShoot = true;
         fwdAccel = pvtFwdAccel;
         bckAccel = pvtFwdAccel;
+        engineSound.Play();
         myPhotonView.RPC("VortexAblity", RpcTarget.All, false);
         myPhotonView.RPC("AreaDamageAbility", RpcTarget.All, false);
     }
@@ -348,7 +347,7 @@ new Dictionary<string, object> { { "PulsarSelected", 1 } });
     {
        
         AreaDamager.SetActive(ablity);
-        AreaDamager.GetComponentInChildren<SphereCollider>().enabled = ablity;
+        AreaDamager.GetComponentInChildren<BoxCollider>().enabled = ablity;
     }
     public void Shooting()
     {

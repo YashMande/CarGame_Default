@@ -135,33 +135,19 @@ public class PlayerManager : MonoBehaviour
         if(gm.gameEnded)
         {
             cC.enabled = false;
-            if(once == false)
+            if (once == false)
             {
-                if(PV.IsMine)
+                if (PV.IsMine)
                 {
                     once = true;
-                    AnalyticsResult analyticsResult = Analytics.CustomEvent(
-           "KillsWithSpeedSter",
-            new Dictionary<string, object> { { "SpeedSterKiils", kills } });
 
-
-                    AnalyticsResult analyticsResult2 = Analytics.CustomEvent(
-   "DeathsWithSpeedSter",
-   new Dictionary<string, object> { { "SpeedSterDeaths", deaths } });
-
-
-                    AnalyticsResult analyticsResult3 = Analytics.CustomEvent(
-"TurboChargeAbility",
-new Dictionary<string, object> { { "TurboCharge", cC.ability1Used } });
-
-                    AnalyticsResult analyticsResult4 = Analytics.CustomEvent(
-"FreezeAbility",
-new Dictionary<string, object> { { "Freeze", cC.ability2Used } });
-
-
-
-
-
+                    Analytics.CustomEvent("SpeedsterSelected",new Dictionary<string, object> { { "Speedster", 2 }});
+                    Analytics.CustomEvent("KillsWithSpeedSter", new Dictionary<string, object> { { "SpeedSterKiils", kills * 2 } });
+                    Analytics.CustomEvent("DeathsWithSpeedSter", new Dictionary<string, object> { { "SpeedSterDeaths", deaths * 2 } });
+                    Analytics.CustomEvent("TurboChargeAbility", new Dictionary<string, object> { { "TurboCharge", cC.ability1Used * 2 } });
+                    Analytics.CustomEvent("FreezeAbility", new Dictionary<string, object> { { "Freeze", cC.ability2Used * 2 } });
+                    Analytics.FlushEvents();
+                 
                 }
 
             }

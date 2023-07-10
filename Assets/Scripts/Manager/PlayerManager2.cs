@@ -117,21 +117,15 @@ public class PlayerManager2 : MonoBehaviour
                 if(PV.IsMine)
                 {
                     once = true;
-                    AnalyticsResult analyticsResult = Analytics.CustomEvent(
-    "KillsWithTitan",
-    new Dictionary<string, object> { { "TitanKiils", kills } });
 
-                    AnalyticsResult analyticsResult2 = Analytics.CustomEvent(
-     "DeathsWithTitan",
-     new Dictionary<string, object> { { "TitanDeaths", deaths } });
+                    Analytics.CustomEvent("TitanSelected", new Dictionary<string, object> { { "Titan", 2 } });
+                    Analytics.CustomEvent("KillsWithTitan", new Dictionary<string, object> { { "TitanKiils", kills * 2 } });
+                    Analytics.CustomEvent("DeathsWithTitan", new Dictionary<string, object> { { "TitanDeaths", deaths * 2 } });
+                    Analytics.CustomEvent("RapidFireAbility", new Dictionary<string, object> { { "RapidFire", cC.ability1Used * 2 } });
+                    Analytics.CustomEvent("RecoveryAbility", new Dictionary<string, object> { { "Recovery", cC.ability2Used * 2 } });
+                    Analytics.FlushEvents();
 
-                    AnalyticsResult analyticsResult3 = Analytics.CustomEvent(
-"RapidFireAbility",
-new Dictionary<string, object> { { "RapidFire", cC.ability1Used } });
 
-                    AnalyticsResult analyticsResult4 = Analytics.CustomEvent(
-"RecoveryAbility",
-new Dictionary<string, object> { { "Recovery", cC.ability2Used } });
 
                 }
 

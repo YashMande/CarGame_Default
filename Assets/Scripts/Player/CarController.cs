@@ -128,9 +128,7 @@ public class CarController : MonoBehaviourPunCallbacks , IDamageble
         transform.position = sphereRB.transform.position;
         engineSound.pitch = minimunPitch;
         canShoot = true;
-        AnalyticsResult analyticsResult = Analytics.CustomEvent(
-"SpeedsterSelected",
-new Dictionary<string, object> { { "SpeedsterSelected", 1 } });
+       
     }
 
     public void Update()
@@ -217,6 +215,7 @@ new Dictionary<string, object> { { "SpeedsterSelected", 1 } });
         fwdAccel = pvtFwdAccel;
         bckAccel = pvtFwdAccel;
         myPhotonView.RPC("BulkUpScale", RpcTarget.All,0);
+        engineSound.Play();
     }
     IEnumerator WaitTimerAB2()
     {

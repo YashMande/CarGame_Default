@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1525752501760772508}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 720, y: 89.1, z: -433.2}
-  m_LocalScale: {x: 3.8025155, y: 3.8025155, z: 3.8025155}
+  m_LocalScale: {x: 2.1892984, y: 2.1892984, z: 2.1892984}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7773393649794496334}
@@ -60,8 +60,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 23.6, y: 47.15, z: 18.13}
-  m_Center: {x: 0, y: 0, z: 5.94}
+  m_Size: {x: 113.247284, y: 113.497025, z: 18.13}
+  m_Center: {x: 0.044571336, y: 33.173542, z: 5.9400005}
 --- !u!95 &1525752502651898662
 Animator:
   serializedVersion: 4
@@ -667,7 +667,7 @@ PrefabInstance:
     - target: {fileID: -7635826562936255635, guid: b93a5d683eb40fa48a81aa5a4c305b81, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 07553007ceddacc47bac6a131f3dc619, type: 2}
+      objectReference: {fileID: 2100000, guid: 6b1ab4e12e877ca4998ecf9c8d929ec9, type: 2}
     - target: {fileID: 919132149155446097, guid: b93a5d683eb40fa48a81aa5a4c305b81, type: 3}
       propertyPath: m_Name
       value: V-shaped UFO_red (1)
